@@ -33,7 +33,7 @@ export default function App() {
         gap={2}
         justify='center'
         className='w-20'
-        style={{ marginTop: '50px' }}
+        style={{ marginTop: '70px' }}
       >
         <Grid direction='column'>
           <Spacer y={5} />
@@ -51,40 +51,44 @@ export default function App() {
             h1
             size={70}
             css={{
-              textAlign: 'center',
               textGradient: '45deg, $purple600 -20%, $blue600 100%',
             }}
             weight='bold'
           >
-            America's favorite bank.
+            America's favorite
+            <br />
+            way to Bank.
           </Text>
 
           <Spacer y={2} />
-          <Input
-            clearable
-            bordered
-            size='xl'
-            labelPlaceholder='Username'
-            initialValue='Username'
-          />
-          <Spacer y={2.5} />
-          <Input.Password
-            size='xl'
-            labelPlaceholder='Password'
-            initialValue='nextui123'
-          />
-          <Spacer y={1.6} />
-          <Button auto color='gradient' size='lg' shadow onPress={handler}>
-            LOGIN
-          </Button>
+          <div>
+            <div className='flex row-auto'>
+              <Input
+                clearable
+                bordered
+                size='xl'
+                labelPlaceholder='Username'
+                initialValue='Username'
+              />
+              <Spacer y={2.5} />
+              <Input.Password
+                size='xl'
+                labelPlaceholder='Password'
+                initialValue='nextui123'
+              />
+              <Spacer y={1.6} />
+              <Button auto color='gradient' size='lg' shadow onPress={handler}>
+                LOGIN
+              </Button>
+            </div>
+            <Spacer y={2} />
 
-          <Spacer y={2} />
-
-          <h3>New here? Sign up!</h3>
-          <Spacer />
-          <Button auto color='warning' size='lg' shadow onPress={handler}>
-            REGISTER
-          </Button>
+            <h3>New here? Sign up!</h3>
+            <Spacer />
+            <Button auto color='warning' size='lg' shadow onPress={handler}>
+              REGISTER
+            </Button>
+          </div>
           <Modal
             closeButton
             blur
