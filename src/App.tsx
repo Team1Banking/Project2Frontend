@@ -144,9 +144,9 @@ export default function App() {
             </Modal.Footer>
           </Modal>
         </Grid>
-        <Spacer x={5} />
+        <Spacer x={3} />
 
-        <div style={{ width: '400px', marginTop: '112px' }}>
+        <div style={{ width: '475px', marginTop: '112px' }}>
           <Tilt tiltMaxAngleX={4} tiltMaxAngleY={4}>
             <CardLogin />
           </Tilt>
