@@ -91,64 +91,74 @@ export default function App() {
               REGISTER
             </Button>
           </div>
-          <Modal
-            closeButton
-            blur
-            aria-labelledby='modal-title'
-            open={visible}
-            onClose={closeHandler}
-          >
-            <Modal.Header>
-              <Text id='modal-title' size={18}>
-                Registration
-              </Text>
-            </Modal.Header>
-            <Modal.Body>
-              <Input
-                clearable
-                bordered
-                fullWidth
-                color='primary'
-                size='lg'
-                placeholder='First Name'
-              />
-              <Input
-                clearable
-                bordered
-                fullWidth
-                color='primary'
-                size='lg'
-                placeholder='Last Name'
-              />
-              <Input
-                clearable
-                bordered
-                fullWidth
-                color='primary'
-                size='lg'
-                placeholder='Username'
-              />
-              <Input
-                clearable
-                bordered
-                fullWidth
-                color='success'
-                size='lg'
-                placeholder='Password'
-              />
-              <Row justify='space-between'>
-                <Checkbox>
-                  <Text size={14}>Remember me</Text>
-                </Checkbox>
-                <Text size={14}>Forgot password?</Text>
-              </Row>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button auto onPress={closeHandler}>
-                Sign Up
-              </Button>
-            </Modal.Footer>
-          </Modal>
+          <div className='flex justify-center'>
+            <Modal
+              closeButton
+              blur
+              aria-labelledby='modal-title'
+              open={visible}
+              onClose={closeHandler}
+            >
+              <Modal.Header>
+                <Text
+                  h1
+                  size={30}
+                  css={{
+                    textGradient: '45deg, $purple600 -20%, $blue600 100%',
+                  }}
+                  weight='bold'
+                >
+                  Registration
+                </Text>
+              </Modal.Header>
+              <Modal.Body>
+                <Input
+                  clearable
+                  bordered
+                  fullWidth
+                  color='primary'
+                  size='lg'
+                  placeholder='First Name'
+                />
+                <Input
+                  clearable
+                  bordered
+                  fullWidth
+                  color='secondary'
+                  size='lg'
+                  placeholder='Last Name'
+                />
+                <Input
+                  clearable
+                  bordered
+                  fullWidth
+                  color='warning'
+                  size='lg'
+                  placeholder='Username'
+                />
+                <Input
+                  clearable
+                  bordered
+                  fullWidth
+                  color='success'
+                  size='lg'
+                  placeholder='Password'
+                />
+                <Row justify='space-between'>
+                  <Checkbox>
+                    <Text size={14}>Remember me</Text>
+                  </Checkbox>
+                  <Text size={14}>Forgot password?</Text>
+                </Row>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button auto color='primary' size='lg' onPress={closeHandler}>
+                  Sign Up
+                </Button>
+              </Modal.Footer>
+              <Spacer />
+            </Modal>
+          </div>
         </Grid>
         <Spacer x={3} />
 
