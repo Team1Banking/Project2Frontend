@@ -94,10 +94,7 @@ export default function App() {
           >
             <Modal.Header>
               <Text id='modal-title' size={18}>
-                Welcome to
-                <Text b size={18}>
-                  NextUI
-                </Text>
+                Registration
               </Text>
             </Modal.Header>
             <Modal.Body>
@@ -107,13 +104,29 @@ export default function App() {
                 fullWidth
                 color='primary'
                 size='lg'
-                placeholder='Email'
+                placeholder='First Name'
               />
               <Input
                 clearable
                 bordered
                 fullWidth
                 color='primary'
+                size='lg'
+                placeholder='Last Name'
+              />
+              <Input
+                clearable
+                bordered
+                fullWidth
+                color='primary'
+                size='lg'
+                placeholder='Username'
+              />
+              <Input
+                clearable
+                bordered
+                fullWidth
+                color='success'
                 size='lg'
                 placeholder='Password'
               />
@@ -125,11 +138,8 @@ export default function App() {
               </Row>
             </Modal.Body>
             <Modal.Footer>
-              <Button auto flat color='error' onPress={closeHandler}>
-                Close
-              </Button>
               <Button auto onPress={closeHandler}>
-                Sign in
+                Sign Up
               </Button>
             </Modal.Footer>
           </Modal>
