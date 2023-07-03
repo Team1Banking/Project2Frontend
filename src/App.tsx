@@ -68,13 +68,15 @@ export default function App() {
                 bordered
                 size='xl'
                 labelPlaceholder='Username'
-                initialValue='Username'
+                initialValue='username'
               />
               <Spacer y={2.5} />
               <Input.Password
+                clearable
+                bordered
                 size='xl'
                 labelPlaceholder='Password'
-                initialValue='nextui123'
+                initialValue='password'
               />
               <Spacer y={1.6} />
               <Button auto color='gradient' size='lg' shadow onPress={handler}>
@@ -150,7 +152,7 @@ export default function App() {
         </Grid>
         <Spacer x={3} />
 
-        <div style={{ width: '475px', marginTop: '112px' }}>
+        <div style={{ width: '475px', marginTop: '95px' }}>
           <Tilt tiltMaxAngleX={4} tiltMaxAngleY={4}>
             <CardLogin />
           </Tilt>
