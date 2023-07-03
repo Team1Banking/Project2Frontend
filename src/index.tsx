@@ -3,14 +3,41 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createTheme, NextUIProvider } from '@nextui-org/react';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+
+const lightTheme = createTheme({
+  type: 'light',
+  theme: {
+    colors: {},
+  },
+});
+
+const darkTheme = createTheme({
+  type: 'dark',
+  theme: {
+    colors: {},
+  },
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <NextThemesProvider
+    defaultTheme='system'
+    attribute='class'
+    value={{
+      light: lightTheme.className,
+      dark: darkTheme.className,
+    }}
+  >
+    <NextUIProvider>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </NextUIProvider>
+  </NextThemesProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
