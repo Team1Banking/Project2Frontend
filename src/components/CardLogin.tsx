@@ -43,7 +43,7 @@ export default function CardLogin() {
           objectFit='cover'
           alt='Card image background'
         />
-        <Card.Footer css={{ position: 'absolute', zIndex: 1, top: 5 }}>
+        <Card.Footer css={{ position: 'absolute', zIndex: 1, bottom: 5 }}>
           <Col>
             <Text
               size={12}
