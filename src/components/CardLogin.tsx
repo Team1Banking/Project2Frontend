@@ -35,7 +35,11 @@ export default function CardLogin() {
         height: '100%',
       }}
     >
-      <Card css={{ width: '100%', height: 'auto' }} variant='flat'>
+      <Card
+        css={{ width: '100%', height: 'auto' }}
+        variant='flat'
+        className='custom-card' // Add custom CSS class
+      >
         <Card.Image
           src={images[currentImageIndex]}
           width='100%'
@@ -54,7 +58,7 @@ export default function CardLogin() {
               MAD-J
             </Text>
             <Text h4 color='white'>
-              America's favorite place to bank.
+              America's favorite way to bank.
             </Text>
           </Col>
         </Card.Footer>
