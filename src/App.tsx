@@ -84,12 +84,29 @@ export default function App() {
               </Button>
             </div>
             <Spacer y={2} />
-
-            <h3>New here? Sign up!</h3>
-            <Spacer />
-            <Button auto color='warning' size='lg' shadow onPress={handler}>
-              REGISTER
-            </Button>
+            <div className='flex'>
+              <div>
+                <h3>New here? Sign up!</h3>
+                <Spacer />
+                <Button auto color='warning' size='lg' shadow onPress={handler}>
+                  REGISTER
+                </Button>
+              </div>
+              <Spacer x={3} />
+              <div>
+                <h3>Create new bank account ?</h3>
+                <Spacer />
+                <Button
+                  auto
+                  color='secondary'
+                  size='lg'
+                  shadow
+                  onPress={handler}
+                >
+                  CREATE ACCOUNT
+                </Button>
+              </div>
+            </div>
           </div>
           <div className='flex justify-center'>
             <Modal
