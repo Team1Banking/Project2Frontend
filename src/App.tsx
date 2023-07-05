@@ -1,4 +1,5 @@
 import React from 'react';
+// import axios from 'axios';
 import {
   Grid,
   Modal,
@@ -18,6 +19,40 @@ export default function App() {
   const closeHandler = () => {
     setVisible(false);
     console.log('closed');
+  };
+
+  const register = async () => {
+    // try {
+    //   const registerDTO = {
+    //     firstName: first_name,
+    //     lastName: last_name,
+    //     username: username,
+    //     password: password,
+    //   };
+    //   const response = await axios.post(
+    //     'http://localhost:3000/auth/register',
+    //     registerDTO
+    //   );
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.error(error);
+    // }
+  };
+
+  const login = async () => {
+    // try {
+    //   const loginDTO = {
+    //     username: first_name,
+    //     password: last_name,
+    //   };
+    //   const response = await axios.post(
+    //     'http://localhost:3000/auth/login',
+    //     loginDTO
+    //   );
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 
   return (
@@ -63,23 +98,16 @@ export default function App() {
           <Spacer y={2} />
           <div>
             <div className='flex row-auto'>
-              <Input
-                clearable
-                bordered
-                size='xl'
-                labelPlaceholder='Username'
-                initialValue='username'
-              />
+              <Input clearable bordered size='xl' labelPlaceholder='Username' />
               <Spacer y={2.5} />
               <Input.Password
                 clearable
                 bordered
                 size='xl'
                 labelPlaceholder='Password'
-                initialValue='password'
               />
               <Spacer y={1.6} />
-              <Button auto color='gradient' size='lg' shadow onPress={handler}>
+              <Button auto color='gradient' size='lg' shadow onPress={login}>
                 LOGIN
               </Button>
             </div>
@@ -169,7 +197,15 @@ export default function App() {
                 </Row>
               </Modal.Body>
               <Modal.Footer>
-                <Button auto color='primary' size='lg' onPress={closeHandler}>
+                <Button
+                  auto
+                  color='primary'
+                  size='lg'
+                  onPress={async () => {
+                    await register();
+                    closeHandler();
+                  }}
+                >
                   Sign Up
                 </Button>
               </Modal.Footer>
