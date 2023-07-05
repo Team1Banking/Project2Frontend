@@ -1,59 +1,112 @@
-import React from 'react';
-// import axios from 'axios';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   Grid,
   Modal,
   Input,
-  Row,
-  Checkbox,
   Button,
   Text,
   Spacer,
+  PressEvent,
 } from '@nextui-org/react';
 import CardLogin from './components/CardLogin';
 import Tilt from 'react-parallax-tilt';
 
 export default function App() {
-  const [visible, setVisible] = React.useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const navigate = useNavigate();
+
   const handler = () => setVisible(true);
+
   const closeHandler = () => {
     setVisible(false);
     console.log('closed');
   };
 
   const register = async () => {
-    // try {
-    //   const registerDTO = {
-    //     firstName: first_name,
-    //     lastName: last_name,
-    //     username: username,
-    //     password: password,
-    //   };
-    //   const response = await axios.post(
-    //     'http://localhost:3000/auth/register',
-    //     registerDTO
-    //   );
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    const employee = { firstName, lastName, username, password };
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/auth/register',
+        employee
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        setSubmissionStatus(
+          `${employee.username} was successfully registered!`
+        );
+        navigate('/');
+      } else {
+        throw new Error('User is already registered');
+      }
+    } catch (error) {
+      console.log(error);
+      setSubmissionStatus('User is already registered');
+    }
   };
 
-  const login = async () => {
-    // try {
-    //   const loginDTO = {
-    //     username: first_name,
-    //     password: last_name,
-    //   };
-    //   const response = await axios.post(
-    //     'http://localhost:3000/auth/login',
-    //     loginDTO
-    //   );
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+  const login = async (e: PressEvent) => {
+    const credentials = { username, password };
+    console.log(credentials);
+    try {
+      const apiUrl = process.env.REACT_APP_LOGIN_API_URL;
+      if (!apiUrl) {
+        throw new Error('API URL is not defined.');
+      }
+
+      const response = await axios.post(apiUrl, credentials);
+
+      const accessToken = response.data.accessToken;
+      localStorage.setItem('accessToken', accessToken);
+
+      const parsedToken = parseJwt(accessToken);
+      console.log(parsedToken);
+      if (parsedToken.Role === 'Account Holder') {
+        navigate('/accountHolder');
+      } else {
+        setErrorMessage('Please register an account.');
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 401) {
+          setErrorMessage('Invalid username or password. Please try again.');
+        } else {
+          setErrorMessage('An error occurred. Please try again later.');
+        }
+      } else {
+        setErrorMessage(
+          'An error occurred. Please check your internet connection and try again.'
+        );
+      }
+    }
   };
+
+  function parseJwt(token: string) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+
+    return JSON.parse(jsonPayload);
+  }
 
   return (
     <div
@@ -98,16 +151,33 @@ export default function App() {
           <Spacer y={2} />
           <div>
             <div className='flex row-auto'>
-              <Input clearable bordered size='xl' labelPlaceholder='Username' />
+              <Input
+                clearable
+                bordered
+                size='xl'
+                value={username}
+                labelPlaceholder='Username'
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
               <Spacer y={2.5} />
               <Input.Password
                 clearable
                 bordered
                 size='xl'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 labelPlaceholder='Password'
+                required
               />
               <Spacer y={1.6} />
-              <Button auto color='gradient' size='lg' shadow onPress={login}>
+              <Button
+                auto
+                color='gradient'
+                size='lg'
+                shadow
+                onPress={(e) => login(e)}
+              >
                 LOGIN
               </Button>
             </div>
@@ -136,6 +206,25 @@ export default function App() {
               </div>
             </div>
           </div>
+          <Spacer y={1.6} />
+          {errorMessage && (
+            <div style={{ textAlign: 'center' }}>
+              <Text color='#ff0000'>{errorMessage}</Text>
+            </div>
+          )}
+          <Spacer />
+
+          {submissionStatus && (
+            <Text
+              color='#FF0000'
+              css={{
+                textAlign: 'center',
+              }}
+            >
+              {submissionStatus}
+            </Text>
+          )}
+          <Spacer y={1} />
           <div className='flex justify-center'>
             <Modal
               closeButton
@@ -164,6 +253,9 @@ export default function App() {
                   color='primary'
                   size='lg'
                   placeholder='First Name'
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
                 />
                 <Input
                   clearable
@@ -172,6 +264,9 @@ export default function App() {
                   color='secondary'
                   size='lg'
                   placeholder='Last Name'
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
                 />
                 <Input
                   clearable
@@ -180,6 +275,9 @@ export default function App() {
                   color='warning'
                   size='lg'
                   placeholder='Username'
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
                 />
                 <Input
                   clearable
@@ -188,26 +286,24 @@ export default function App() {
                   color='success'
                   size='lg'
                   placeholder='Password'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
-                <Row justify='space-between'>
-                  <Checkbox>
-                    <Text size={14}>Remember me</Text>
-                  </Checkbox>
-                  <Text size={14}>Forgot password?</Text>
-                </Row>
               </Modal.Body>
               <Modal.Footer>
                 <Button
                   auto
                   color='primary'
                   size='lg'
-                  onPress={async () => {
+                  onClick={async () => {
                     await register();
                     closeHandler();
                   }}
                 >
                   Sign Up
                 </Button>
+                <Spacer />
               </Modal.Footer>
               <Spacer />
             </Modal>
