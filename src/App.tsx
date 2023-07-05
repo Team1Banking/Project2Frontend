@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -32,18 +32,19 @@ export default function App() {
   };
 
   const register = async () => {
-    const employee = { firstName, lastName, username, password };
+    const user = { firstName, lastName, username, password };
+    console.log(user);
 
     try {
-      const response = await axios.post(
-        'http://localhost:8080/auth/register',
-        employee
-      );
+      const registerUrl = process.env.REACT_APP_REGISTER_API_URL;
+      if (!registerUrl) {
+        throw new Error('REGISTER URL is not defined.');
+      }
+
+      const response = await axios.post(registerUrl, user);
 
       if (response.status >= 200 && response.status < 300) {
-        setSubmissionStatus(
-          `${employee.username} was successfully registered!`
-        );
+        setSubmissionStatus(`${user.username} was successfully registered!`);
         navigate('/');
       } else {
         throw new Error('User is already registered');
@@ -58,12 +59,12 @@ export default function App() {
     const credentials = { username, password };
     console.log(credentials);
     try {
-      const apiUrl = process.env.REACT_APP_LOGIN_API_URL;
-      if (!apiUrl) {
-        throw new Error('API URL is not defined.');
+      const loginUrl = process.env.REACT_APP_LOGIN_API_URL;
+      if (!loginUrl) {
+        throw new Error('LOGIN URL is not defined.');
       }
 
-      const response = await axios.post(apiUrl, credentials);
+      const response = await axios.post(loginUrl, credentials);
 
       const accessToken = response.data.accessToken;
       localStorage.setItem('accessToken', accessToken);
@@ -117,12 +118,7 @@ export default function App() {
         height: '100vh',
       }}
     >
-      <Grid.Container
-        gap={2}
-        justify='center'
-        className='w-20'
-        style={{ marginTop: '70px' }}
-      >
+      <Grid.Container gap={2} justify='center' style={{ marginTop: '70px' }}>
         <Grid direction='column'>
           <Spacer y={5} />
           <Text
@@ -214,22 +210,18 @@ export default function App() {
           )}
           <Spacer />
 
-          {submissionStatus && (
-            <Text
-              color='#FF0000'
-              css={{
-                textAlign: 'center',
-              }}
-            >
-              {submissionStatus}
-            </Text>
-          )}
-          <Spacer y={1} />
-          <div className='flex justify-center'>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
             <Modal
               closeButton
               blur
-              aria-labelledby='modal-title'
+              aria-label='Registration Modal'
               open={visible}
               onClose={closeHandler}
             >
@@ -292,20 +284,34 @@ export default function App() {
                 />
               </Modal.Body>
               <Modal.Footer>
-                <Button
-                  auto
-                  color='primary'
-                  size='lg'
-                  onClick={async () => {
-                    await register();
-                    closeHandler();
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
                   }}
                 >
-                  Sign Up
-                </Button>
-                <Spacer />
+                  <Button
+                    auto
+                    color='primary'
+                    shadow
+                    size='lg'
+                    onClick={register}
+                  >
+                    Sign Up
+                  </Button>
+                </div>
               </Modal.Footer>
-              <Spacer />
+              {submissionStatus && (
+                <Text
+                  color='#FF0000'
+                  css={{
+                    textAlign: 'center',
+                  }}
+                >
+                  {submissionStatus}
+                </Text>
+              )}
+              <Spacer x={1} />
             </Modal>
           </div>
         </Grid>
