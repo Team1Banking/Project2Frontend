@@ -7,7 +7,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <Box></Box>
+      <Box>SideBar</Box>
     </>
   );
 }
