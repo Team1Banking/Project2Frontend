@@ -6,6 +6,7 @@ import './index.css';
 import App from './App';
 import { createTheme, NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import Sidebar from './components/Sidebar';
 import ViewAccounts from './components/ViewAccounts';
 import Withdraw from './components/Withdraw';
 import Deposit from './components/Deposit';
@@ -26,21 +27,31 @@ ReactDOM.render(
     <NextUIProvider theme={darkTheme}>
       <NextThemesProvider>
         <Router>
-          <Main>
-            <Routes>
-              <Route path='/' element={<App />} />
-              <Route path='/view-accounts' element={<ViewAccounts />} />
-              <Route path='/withdraw' element={<Withdraw />} />
-              <Route path='/deposit' element={<Deposit />} />
-              <Route path='/transfer' element={<Transfer />} />
-              <Route
-                path='/recent-transactions'
-                element={<RecentTransactions />}
-              />
-              <Route path='/register-account' element={<RegisterAccount />} />
-              <Route path='/profile' element={<Profile />} />
-            </Routes>
-          </Main>
+          <Routes>
+            <Route path='/' element={<App />} />
+            <Route
+              path='/*'
+              element={
+                <Sidebar>
+                  <Routes>
+                    <Route path='/view-accounts' element={<ViewAccounts />} />
+                    <Route path='/withdraw' element={<Withdraw />} />
+                    <Route path='/deposit' element={<Deposit />} />
+                    <Route path='/transfer' element={<Transfer />} />
+                    <Route
+                      path='/recent-transactions'
+                      element={<RecentTransactions />}
+                    />
+                    <Route
+                      path='/register-account'
+                      element={<RegisterAccount />}
+                    />
+                    <Route path='/profile' element={<Profile />} />
+                  </Routes>
+                </Sidebar>
+              }
+            />
+          </Routes>
         </Router>
       </NextThemesProvider>
     </NextUIProvider>

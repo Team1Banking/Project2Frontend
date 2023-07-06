@@ -99,7 +99,7 @@ interface MiniDrawerProps {
   children: React.ReactNode;
 }
 
-const Sidebar: React.FC<MiniDrawerProps> = ({ children }) => {
+export default function Sidebar({ children }: MiniDrawerProps) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -242,6 +242,4 @@ const Sidebar: React.FC<MiniDrawerProps> = ({ children }) => {
       </Box>
     </Box>
   );
-};
-
-export default Sidebar;
+}
