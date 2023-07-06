@@ -26,6 +26,11 @@ import AddCardIcon from '@mui/icons-material/AddCard';
 import PaidIcon from '@mui/icons-material/Paid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import { useState, useMemo, createContext, useContext } from 'react';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const drawerWidth = 240;
 
@@ -63,21 +68,31 @@ interface AppBarProps extends MuiAppBarProps {
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+})<AppBarProps>(({ theme, open }) => {
+  const colorMode = useContext(ColorModeContext);
+
+  return {
+    zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.leavingScreen,
     }),
-  }),
-}));
+    ...(open && {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+    '& .MuiIconButton-root': {
+      color:
+        theme.palette.mode === 'dark'
+          ? theme.palette.primary.main
+          : theme.palette.primary.contrastText,
+    },
+  };
+});
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -102,6 +117,16 @@ const darkTheme = createTheme({
   },
 });
 
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
+
+const ColorModeContext = createContext({
+  toggleColorMode: () => {},
+});
+
 interface MiniDrawerProps {
   children: React.ReactNode;
 }
@@ -109,7 +134,8 @@ interface MiniDrawerProps {
 export default function Sidebar({ children }: MiniDrawerProps) {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -122,6 +148,25 @@ export default function Sidebar({ children }: MiniDrawerProps) {
   const handleClick = () => {
     navigate('/home');
   };
+
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+      },
+    }),
+    []
+  );
+
+  const customTheme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+      }),
+    [mode]
+  );
 
   const SidebarItem: React.FC<{
     icon: React.ReactNode;
@@ -155,114 +200,131 @@ export default function Sidebar({ children }: MiniDrawerProps) {
   };
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <Box sx={{ display: 'flex' }}>
-        <AppBar position='fixed' open={open}>
-          <Toolbar>
-            <IconButton
-              color='inherit'
-              aria-label='open drawer'
-              onClick={handleDrawerOpen}
-              edge='start'
-              sx={{
-                marginRight: 5,
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer variant='permanent' open={open}>
-          <DrawerHeader>
-            <div className='flex justify-center'>
-              <Text
-                h1
-                size={20}
-                css={{
-                  paddingLeft: '20px',
-                  paddingTop: '10px',
-                  textGradient: '45deg, $purple600 -20%, $blue600 100%',
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Box sx={{ display: 'flex' }}>
+          <AppBar position='fixed' open={open}>
+            <Toolbar>
+              <IconButton
+                color='inherit'
+                aria-label='open drawer'
+                onClick={handleDrawerOpen}
+                edge='start'
+                sx={{
+                  marginRight: 5,
+                  ...(open && { display: 'none' }),
                 }}
-                weight='bold'
-                onClick={handleClick}
-                className='cursor-pointer '
               >
-                HOME
-              </Text>
-            </div>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'rtl' ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <Grid.Container gap={3}>
-            <Grid>
-              <Avatar
-                css={{
-                  mw: '600px',
-                  height: open ? '22vh' : '2vh',
-                  width: open ? '22vh' : '2vh',
-                  transition: 'width 0.3s, height 0.3s',
-                }}
-                zoomed
-                size='sm'
-                src='https://media.istockphoto.com/id/1262964459/photo/nothing-is-a-magnet-for-success-like-self-confidence.webp?b=1&s=170667a&w=0&k=20&c=MGoEpHkz63VRhAPZ44dFAuAmRC0QAseAc6srOQKHDbw='
-                alt='account holder'
-                color='gradient'
-                bordered
-                className='flex mx-auto rounded-full md:w-full cursor-none'
-                pointer
+                <MenuIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <Drawer variant='permanent' open={open}>
+            <DrawerHeader>
+              <div className='flex justify-center'>
+                <Text
+                  h1
+                  size={20}
+                  css={{
+                    paddingLeft: '20px',
+                    paddingTop: '10px',
+                    textGradient: '45deg, $purple600 -20%, $blue600 100%',
+                  }}
+                  weight='bold'
+                  onClick={handleClick}
+                  className='cursor-pointer '
+                >
+                  HOME
+                </Text>
+              </div>
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === 'rtl' ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
+            <Grid.Container gap={3}>
+              <Grid>
+                <Avatar
+                  css={{
+                    mw: '600px',
+                    height: open ? '22vh' : '2vh',
+                    width: open ? '22vh' : '2vh',
+                    transition: 'width 0.3s, height 0.3s',
+                  }}
+                  zoomed
+                  size='sm'
+                  src='https://media.istockphoto.com/id/1262964459/photo/nothing-is-a-magnet-for-success-like-self-confidence.webp?b=1&s=170667a&w=0&k=20&c=MGoEpHkz63VRhAPZ44dFAuAmRC0QAseAc6srOQKHDbw='
+                  alt='account holder'
+                  color='gradient'
+                  bordered
+                  className='flex mx-auto rounded-full md:w-full cursor-none'
+                  pointer
+                />
+              </Grid>
+            </Grid.Container>
+            <List>
+              <SidebarItem
+                icon={<AccountBalanceIcon />}
+                text='View Accounts'
+                to='/view-accounts'
               />
-            </Grid>
-          </Grid.Container>
-          <List>
-            <SidebarItem
-              icon={<AccountBalanceIcon />}
-              text='View Accounts'
-              to='/view-accounts'
-            />
-            <SidebarItem
-              icon={<PaymentsIcon />}
-              text='Withdraw'
-              to='/withdraw'
-            />
-            <SidebarItem icon={<PaidIcon />} text='Deposit' to='/deposit' />
-            <SidebarItem
-              icon={<CurrencyExchangeIcon />}
-              text='Transfer'
-              to='/transfer'
-            />
-          </List>
-          <Divider />
-          <List>
-            <SidebarItem
-              icon={<ReceiptLongIcon />}
-              text='Recent Transactions'
-              to='/recent-transactions'
-            />
-            <SidebarItem
-              icon={<AddCardIcon />}
-              text='Register Account'
-              to='/register-account'
-            />
-            <SidebarItem
-              icon={<AccountCircleIcon />}
-              text='Update Profile'
-              to='/profile'
-            />
-          </List>
-        </Drawer>
-        <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
-          <DrawerHeader />
+              <SidebarItem
+                icon={<PaymentsIcon />}
+                text='Withdraw'
+                to='/withdraw'
+              />
+              <SidebarItem icon={<PaidIcon />} text='Deposit' to='/deposit' />
+              <SidebarItem
+                icon={<CurrencyExchangeIcon />}
+                text='Transfer'
+                to='/transfer'
+              />
+            </List>
+
+            <List>
+              <SidebarItem
+                icon={<ReceiptLongIcon />}
+                text='Recent Transactions'
+                to='/recent-transactions'
+              />
+              <SidebarItem
+                icon={<AddCardIcon />}
+                text='Register Account'
+                to='/register-account'
+              />
+              <SidebarItem
+                icon={<AccountCircleIcon />}
+                text='Update Profile'
+                to='/profile'
+              />
+            </List>
+
+            <Stack
+              direction='column'
+              className='flex justify-center p-12 margin-auto'
+            >
+              <Button color='secondary' variant='contained'>
+                Logout
+              </Button>
+            </Stack>
+            <div className='flex justify-center p-2'>
+              <IconButton onClick={colorMode.toggleColorMode} color='inherit'>
+                {customTheme.palette.mode === 'dark' ? (
+                  <Brightness7Icon />
+                ) : (
+                  <Brightness4Icon />
+                )}
+              </IconButton>
+            </div>
+          </Drawer>
           {children}
         </Box>
-      </Box>
-    </ThemeProvider>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
