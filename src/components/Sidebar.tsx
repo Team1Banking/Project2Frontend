@@ -18,6 +18,7 @@ import { Avatar, Grid, Text } from '@nextui-org/react';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
@@ -106,6 +107,7 @@ interface MiniDrawerProps {
 }
 
 export default function Sidebar({ children }: MiniDrawerProps) {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -115,6 +117,10 @@ export default function Sidebar({ children }: MiniDrawerProps) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleClick = () => {
+    navigate('/home');
   };
 
   const SidebarItem: React.FC<{
@@ -180,8 +186,10 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                   textGradient: '45deg, $purple600 -20%, $blue600 100%',
                 }}
                 weight='bold'
+                onClick={handleClick}
+                className='cursor-pointer '
               >
-                MAD-J
+                HOME
               </Text>
             </div>
             <IconButton onClick={handleDrawerClose}>
@@ -245,7 +253,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
             />
             <SidebarItem
               icon={<AccountCircleIcon />}
-              text='Profile'
+              text='Update Profile'
               to='/profile'
             />
           </List>

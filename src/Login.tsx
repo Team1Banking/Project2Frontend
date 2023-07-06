@@ -72,7 +72,7 @@ export default function Login() {
       const parsedToken = parseJwt(accessToken);
       console.log(parsedToken);
       if (parsedToken.Role === 'Account Holder') {
-        navigate('/accountHolder');
+        navigate('/home');
       } else {
         setErrorMessage('Please register an account.');
       }

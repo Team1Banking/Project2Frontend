@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Main from './components/Main';
+import Home from './components/Home';
 import './index.css';
 import App from './App';
 import { createTheme, NextUIProvider } from '@nextui-org/react';
@@ -34,6 +34,7 @@ ReactDOM.render(
               element={
                 <Sidebar>
                   <Routes>
+                    <Route path='/home' element={<Home />} />
                     <Route path='/view-accounts' element={<ViewAccounts />} />
                     <Route path='/withdraw' element={<Withdraw />} />
                     <Route path='/deposit' element={<Deposit />} />
