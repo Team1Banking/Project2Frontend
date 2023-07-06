@@ -1,19 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainPage from './components/MainPage';
+import Main from './components/Main';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { createTheme, NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
-
-const lightTheme = createTheme({
-  type: 'light',
-  theme: {
-    colors: {},
-  },
-});
+import ViewAccounts from './components/ViewAccounts';
+import Withdraw from './components/Withdraw';
+import Deposit from './components/Deposit';
+import Transfer from './components/Transfer';
+import RecentTransactions from './components/RecentTransactions';
+import RegisterAccount from './components/RegisterAccount';
+import Profile from './components/Profile';
 
 const darkTheme = createTheme({
   type: 'dark',
@@ -22,29 +21,29 @@ const darkTheme = createTheme({
   },
 });
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <NextThemesProvider
-    defaultTheme='system'
-    attribute='class'
-    value={{
-      light: lightTheme.className,
-      dark: darkTheme.className,
-    }}
-  >
-    <NextUIProvider>
-      <React.StrictMode>
+ReactDOM.render(
+  <React.StrictMode>
+    <NextUIProvider theme={darkTheme}>
+      <NextThemesProvider>
         <Router>
-          <Routes>
-            <Route path='/' element={<App />} />
-            <Route path='/accountHolder' element={<MainPage />} />
-          </Routes>
+          <Main>
+            <Routes>
+              <Route path='/' element={<App />} />
+              <Route path='/view-accounts' element={<ViewAccounts />} />
+              <Route path='/withdraw' element={<Withdraw />} />
+              <Route path='/deposit' element={<Deposit />} />
+              <Route path='/transfer' element={<Transfer />} />
+              <Route
+                path='/recent-transactions'
+                element={<RecentTransactions />}
+              />
+              <Route path='/register-account' element={<RegisterAccount />} />
+              <Route path='/profile' element={<Profile />} />
+            </Routes>
+          </Main>
         </Router>
-      </React.StrictMode>
+      </NextThemesProvider>
     </NextUIProvider>
-  </NextThemesProvider>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
-
-reportWebVitals();
