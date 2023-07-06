@@ -23,6 +23,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import PaidIcon from '@mui/icons-material/Paid';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 const drawerWidth = 240;
 
@@ -51,8 +53,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: theme.spacing(0, 2),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -94,6 +94,12 @@ const Drawer = styled(MuiDrawer, {
     '& .MuiDrawer-paper': closedMixin(theme),
   }),
 }));
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 interface MiniDrawerProps {
   children: React.ReactNode;
@@ -143,103 +149,112 @@ export default function Sidebar({ children }: MiniDrawerProps) {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <AppBar position='fixed' open={open}>
-        <Toolbar>
-          <IconButton
-            color='inherit'
-            aria-label='open drawer'
-            onClick={handleDrawerOpen}
-            edge='start'
-            sx={{
-              marginRight: 5,
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant='permanent' open={open}>
-        <DrawerHeader>
-          <div className='flex justify-center'>
-            <Text
-              h1
-              size={20}
-              css={{
-                textGradient: '45deg, $purple600 -20%, $blue600 100%',
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Box sx={{ display: 'flex' }}>
+        <AppBar position='fixed' open={open}>
+          <Toolbar>
+            <IconButton
+              color='inherit'
+              aria-label='open drawer'
+              onClick={handleDrawerOpen}
+              edge='start'
+              sx={{
+                marginRight: 5,
+                ...(open && { display: 'none' }),
               }}
-              weight='bold'
             >
-              MAD-J
-            </Text>
-          </div>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <Grid.Container gap={3}>
-          <Grid>
-            <Avatar
-              css={{
-                mw: '600px',
-                height: open ? '22vh' : '2vh',
-                width: open ? '22vh' : '2vh',
-                transition: 'width 0.3s, height 0.3s',
-              }}
-              zoomed
-              size='sm'
-              src='https://media.istockphoto.com/id/1262964459/photo/nothing-is-a-magnet-for-success-like-self-confidence.webp?b=1&s=170667a&w=0&k=20&c=MGoEpHkz63VRhAPZ44dFAuAmRC0QAseAc6srOQKHDbw='
-              alt='account holder'
-              color='gradient'
-              bordered
-              className='flex mx-auto rounded-full md:w-full cursor-none'
-              pointer
+              <MenuIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <Drawer variant='permanent' open={open}>
+          <DrawerHeader>
+            <div className='flex justify-center'>
+              <Text
+                h1
+                size={20}
+                css={{
+                  paddingLeft: '20px',
+                  paddingTop: '10px',
+                  textGradient: '45deg, $purple600 -20%, $blue600 100%',
+                }}
+                weight='bold'
+              >
+                MAD-J
+              </Text>
+            </div>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'rtl' ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <Grid.Container gap={3}>
+            <Grid>
+              <Avatar
+                css={{
+                  mw: '600px',
+                  height: open ? '22vh' : '2vh',
+                  width: open ? '22vh' : '2vh',
+                  transition: 'width 0.3s, height 0.3s',
+                }}
+                zoomed
+                size='sm'
+                src='https://media.istockphoto.com/id/1262964459/photo/nothing-is-a-magnet-for-success-like-self-confidence.webp?b=1&s=170667a&w=0&k=20&c=MGoEpHkz63VRhAPZ44dFAuAmRC0QAseAc6srOQKHDbw='
+                alt='account holder'
+                color='gradient'
+                bordered
+                className='flex mx-auto rounded-full md:w-full cursor-none'
+                pointer
+              />
+            </Grid>
+          </Grid.Container>
+          <List>
+            <SidebarItem
+              icon={<AccountBalanceIcon />}
+              text='View Accounts'
+              to='/view-accounts'
             />
-          </Grid>
-        </Grid.Container>
-        <List>
-          <SidebarItem
-            icon={<AccountBalanceIcon />}
-            text='View Accounts'
-            to='/view-accounts'
-          />
-          <SidebarItem icon={<PaymentsIcon />} text='Withdraw' to='/withdraw' />
-          <SidebarItem icon={<PaidIcon />} text='Deposit' to='/deposit' />
-          <SidebarItem
-            icon={<CurrencyExchangeIcon />}
-            text='Transfer'
-            to='/transfer'
-          />
-        </List>
-        <Divider />
-        <List>
-          <SidebarItem
-            icon={<ReceiptLongIcon />}
-            text='Recent Transactions'
-            to='/recent-transactions'
-          />
-          <SidebarItem
-            icon={<AddCardIcon />}
-            text='Register Account'
-            to='/register-account'
-          />
-          <SidebarItem
-            icon={<AccountCircleIcon />}
-            text='Profile'
-            to='/profile'
-          />
-        </List>
-      </Drawer>
-      <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        {children}
+            <SidebarItem
+              icon={<PaymentsIcon />}
+              text='Withdraw'
+              to='/withdraw'
+            />
+            <SidebarItem icon={<PaidIcon />} text='Deposit' to='/deposit' />
+            <SidebarItem
+              icon={<CurrencyExchangeIcon />}
+              text='Transfer'
+              to='/transfer'
+            />
+          </List>
+          <Divider />
+          <List>
+            <SidebarItem
+              icon={<ReceiptLongIcon />}
+              text='Recent Transactions'
+              to='/recent-transactions'
+            />
+            <SidebarItem
+              icon={<AddCardIcon />}
+              text='Register Account'
+              to='/register-account'
+            />
+            <SidebarItem
+              icon={<AccountCircleIcon />}
+              text='Profile'
+              to='/profile'
+            />
+          </List>
+        </Drawer>
+        <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <DrawerHeader />
+          {children}
+        </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 }
