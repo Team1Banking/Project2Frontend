@@ -25,6 +25,8 @@ export default function Login() {
   const [modalUsername, setModalUsername] = useState('');
   const [modalPassword, setModalPassword] = useState('');
   const [userId, setUserId] = useState('');
+  const [accountMessage, setAccountMessage] = useState('');
+
   const navigate = useNavigate();
 
   const login = async () => {
@@ -158,9 +160,11 @@ export default function Login() {
 
       const response = await axios.post(url, payload, { headers });
 
+      setAccountMessage('Account created successfully.');
       console.log('Response data:', response.data);
     } catch (error) {
       console.error(error);
+      setAccountMessage('Account could not be created.');
     }
   };
 
@@ -289,12 +293,13 @@ export default function Login() {
                   }}
                   weight='bold'
                 >
-                  {step === 1 ? 'Create Bank Account' : 'Select Account Type'}
+                  {step === 1 ? 'Login' : 'Select Account Type'}
                 </Text>
               </Modal.Header>
               <Modal.Body>
                 {step === 1 ? (
                   <>
+                    <Spacer />
                     <Input
                       clearable
                       bordered
@@ -304,7 +309,7 @@ export default function Login() {
                       onChange={(e) => setModalUsername(e.target.value)}
                       required
                     />
-
+                    <Spacer />
                     <Input.Password
                       clearable
                       bordered
@@ -314,6 +319,7 @@ export default function Login() {
                       onChange={(e) => setModalPassword(e.target.value)}
                       required
                     />
+                    <Spacer />
                     <Button
                       auto
                       color='gradient'
@@ -323,7 +329,7 @@ export default function Login() {
                     >
                       CONTINUE
                     </Button>
-                    <Spacer y={1.6} />
+                    <Spacer />
                   </>
                 ) : (
                   <>
@@ -353,6 +359,7 @@ export default function Login() {
                       SUBMIT
                     </Button>
                     <Spacer y={1.6} />
+                    <Text>{accountMessage}</Text>
                   </>
                 )}
               </Modal.Body>
