@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
+
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -9,12 +10,11 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { Avatar, Grid, Text } from '@nextui-org/react';
+import { Avatar, Grid } from '@nextui-org/react';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import { Link } from 'react-router-dom';
@@ -27,8 +27,9 @@ import PaidIcon from '@mui/icons-material/Paid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState, useMemo, createContext } from 'react';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Button from '@mui/material/Button';
+import { openDB } from 'idb';
+import profilePictureImage from '/Users/deshondixon/projects/revature/project2frontend/src/ant-high-resolution-logo-color-on-transparent-background_(4).png';
 
 const drawerWidth = 240;
 
@@ -130,6 +131,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -137,10 +139,6 @@ export default function Sidebar({ children }: MiniDrawerProps) {
 
   const handleDrawerClose = () => {
     setOpen(false);
-  };
-
-  const handleClick = () => {
-    navigate('/home');
   };
 
   const toggleColorMode = () => {
@@ -159,15 +157,47 @@ export default function Sidebar({ children }: MiniDrawerProps) {
     navigate('/');
   };
 
-  const customTheme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
+  // const customTheme = useMemo(
+  //   () =>
+  //     createTheme({
+  //       palette: {
+  //         mode,
+  //       },
+  //     }),
+  //   [mode]
+  // );
+
+  useEffect(() => {
+    const fetchProfilePicture = async () => {
+      const db = await openDB('myDB', 1, {
+        upgrade(db) {
+          db.createObjectStore('profilePictures');
         },
-      }),
-    [mode]
-  );
+      });
+
+      const transaction = db.transaction('profilePictures', 'readonly');
+      const objectStore = transaction.objectStore('profilePictures');
+      const request = objectStore.getAll();
+
+      request.then((profilePictures) => {
+        if (profilePictures && profilePictures.length > 0) {
+          setProfilePicture(profilePictures[0].profilePicture);
+        }
+      });
+    };
+
+    fetchProfilePicture();
+  }, []);
+
+  const saveProfilePicture = async (profilePicture: string) => {
+    const db = await openDB('myDB', 1);
+    const transaction = db.transaction('profilePictures', 'readwrite');
+    const objectStore = transaction.objectStore('profilePictures');
+    objectStore.clear();
+    objectStore.add({ profilePicture });
+
+    setProfilePicture(profilePicture);
+  };
 
   const SidebarItem: React.FC<{
     icon: React.ReactNode;
@@ -204,33 +234,23 @@ export default function Sidebar({ children }: MiniDrawerProps) {
         <CssBaseline />
         <Box sx={{ display: 'flex' }}>
           <Drawer variant='permanent' open={open}>
-            <DrawerHeader>
-              <Text
-                h1
-                size={20}
-                css={{
-                  paddingLeft: '20px',
-                  paddingTop: '10px',
-                  textGradient: '45deg, $purple600 -20%, $blue600 100%',
-                }}
-                weight='bold'
-                onClick={handleClick}
-                className='cursor-pointer '
-              >
-                HOME
-              </Text>
-              <IconButton onClick={handleDrawerClose}>
-                {theme.direction === 'rtl' ? (
-                  <ChevronRightIcon />
-                ) : (
-                  <ChevronLeftIcon />
-                )}
-              </IconButton>
-            </DrawerHeader>
+            <div className='flex items-center justify-between '>
+              <DrawerHeader></DrawerHeader>
+              <div>
+                <IconButton onClick={handleDrawerClose}>
+                  {theme.direction === 'rtl' ? (
+                    <ChevronLeftIcon />
+                  ) : (
+                    <ChevronLeftIcon />
+                  )}
+                </IconButton>
+              </div>
+            </div>
             <Divider />
             <Grid.Container gap={3}>
               <Grid>
                 <Avatar
+                  key={profilePicture}
                   css={{
                     mw: '600px',
                     height: open ? '22vh' : '2vh',
@@ -239,7 +259,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                   }}
                   zoomed
                   size='sm'
-                  src='https://media.istockphoto.com/id/1262964459/photo/nothing-is-a-magnet-for-success-like-self-confidence.webp?b=1&s=170667a&w=0&k=20&c=MGoEpHkz63VRhAPZ44dFAuAmRC0QAseAc6srOQKHDbw='
+                  src={profilePicture || profilePictureImage}
                   alt='account holder'
                   color='gradient'
                   bordered
@@ -296,19 +316,26 @@ export default function Sidebar({ children }: MiniDrawerProps) {
             }}
           >
             <AppBar position='fixed' open={open}>
-              <Toolbar>
-                <IconButton
-                  color='inherit'
-                  aria-label='open drawer'
-                  onClick={handleDrawerOpen}
-                  edge='start'
-                  sx={{
-                    marginRight: 5,
-                    ...(open && { display: 'none' }),
-                  }}
-                >
-                  <MenuIcon />
-                </IconButton>
+              <Toolbar className='bg-grey-900'>
+                <div className='flex justify-center'>
+                  <IconButton
+                    color='inherit'
+                    aria-label='open drawer'
+                    onClick={handleDrawerOpen}
+                    edge='start'
+                    sx={{
+                      justifyContent: 'center',
+                      marginRight: 5,
+                      ...(open && { display: 'none' }),
+                    }}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+
+                  {/* <Text h1 size={30} css={{}} weight='thin'>
+                    Work Hard Plan For the Future
+                  </Text> */}
+                </div>
                 <Button
                   variant='contained'
                   onClick={logout}

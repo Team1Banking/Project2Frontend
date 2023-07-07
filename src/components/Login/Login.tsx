@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -40,8 +40,10 @@ export default function Login() {
 
       const response = await axios.post(loginUrl, credentials);
 
-      const accessToken = response.data.accessToken;
+      const { accessToken, ...userData } = response.data;
+
       localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('userData', JSON.stringify(userData));
 
       const parsedToken = parseJwt(accessToken);
       console.log(parsedToken);
@@ -119,6 +121,14 @@ export default function Login() {
     setCheckingSelected(false);
     setSavingsSelected(false);
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      // If access token exists, navigate to the desired page
+      navigate('/home');
+    }
+  }, [navigate]);
 
   function parseJwt(token: string) {
     var base64Url = token.split('.')[1];
