@@ -268,7 +268,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                 />
               </Grid>
             </Grid.Container>
-            <Divider />
+
             <List>
               <SidebarItem
                 icon={<AccountBalanceIcon />}
