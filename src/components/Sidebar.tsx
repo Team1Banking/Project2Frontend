@@ -26,11 +26,9 @@ import AddCardIcon from '@mui/icons-material/AddCard';
 import PaidIcon from '@mui/icons-material/Paid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useState, useMemo, createContext } from 'react';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import { useState, useMemo, createContext, useContext } from 'react';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const drawerWidth = 240;
 
@@ -69,8 +67,6 @@ interface AppBarProps extends MuiAppBarProps {
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => {
-  const colorMode = useContext(ColorModeContext);
-
   return {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -117,13 +113,11 @@ const darkTheme = createTheme({
   },
 });
 
-const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-  },
-});
+interface ColorModeContextProps {
+  toggleColorMode: () => void;
+}
 
-const ColorModeContext = createContext({
+export const ColorModeContext = createContext<ColorModeContextProps>({
   toggleColorMode: () => {},
 });
 
@@ -149,14 +143,21 @@ export default function Sidebar({ children }: MiniDrawerProps) {
     navigate('/home');
   };
 
+  const toggleColorMode = () => {
+    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+  };
+
   const colorMode = useMemo(
     () => ({
-      toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-      },
+      toggleColorMode: toggleColorMode,
     }),
     []
   );
+
+  const logout = () => {
+    localStorage.removeItem('accessToken');
+    navigate('/');
+  };
 
   const customTheme = useMemo(
     () =>
@@ -174,10 +175,8 @@ export default function Sidebar({ children }: MiniDrawerProps) {
     to: string;
   }> = ({ icon, text, to }) => {
     return (
-      <ListItem disablePadding>
+      <ListItem disablePadding component={Link} to={to}>
         <ListItemButton
-          component={Link}
-          to={to}
           sx={{
             minHeight: 48,
             justifyContent: open ? 'initial' : 'center',
@@ -204,40 +203,22 @@ export default function Sidebar({ children }: MiniDrawerProps) {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <Box sx={{ display: 'flex' }}>
-          <AppBar position='fixed' open={open}>
-            <Toolbar>
-              <IconButton
-                color='inherit'
-                aria-label='open drawer'
-                onClick={handleDrawerOpen}
-                edge='start'
-                sx={{
-                  marginRight: 5,
-                  ...(open && { display: 'none' }),
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
           <Drawer variant='permanent' open={open}>
             <DrawerHeader>
-              <div className='flex justify-center'>
-                <Text
-                  h1
-                  size={20}
-                  css={{
-                    paddingLeft: '20px',
-                    paddingTop: '10px',
-                    textGradient: '45deg, $purple600 -20%, $blue600 100%',
-                  }}
-                  weight='bold'
-                  onClick={handleClick}
-                  className='cursor-pointer '
-                >
-                  HOME
-                </Text>
-              </div>
+              <Text
+                h1
+                size={20}
+                css={{
+                  paddingLeft: '20px',
+                  paddingTop: '10px',
+                  textGradient: '45deg, $purple600 -20%, $blue600 100%',
+                }}
+                weight='bold'
+                onClick={handleClick}
+                className='cursor-pointer '
+              >
+                HOME
+              </Text>
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === 'rtl' ? (
                   <ChevronRightIcon />
@@ -267,6 +248,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                 />
               </Grid>
             </Grid.Container>
+            <Divider />
             <List>
               <SidebarItem
                 icon={<AccountBalanceIcon />}
@@ -285,7 +267,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                 to='/transfer'
               />
             </List>
-
+            <Divider />
             <List>
               <SidebarItem
                 icon={<ReceiptLongIcon />}
@@ -294,7 +276,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
               />
               <SidebarItem
                 icon={<AddCardIcon />}
-                text='Register Account'
+                text='Add Bank Account'
                 to='/register-account'
               />
               <SidebarItem
@@ -303,26 +285,42 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                 to='/profile'
               />
             </List>
-
-            <Stack
-              direction='column'
-              className='flex justify-center p-12 margin-auto'
-            >
-              <Button color='secondary' variant='contained'>
-                Logout
-              </Button>
-            </Stack>
-            <div className='flex justify-center p-2'>
-              <IconButton onClick={colorMode.toggleColorMode} color='inherit'>
-                {customTheme.palette.mode === 'dark' ? (
-                  <Brightness7Icon />
-                ) : (
-                  <Brightness4Icon />
-                )}
-              </IconButton>
-            </div>
           </Drawer>
-          {children}
+          <Box
+            component='main'
+            sx={{
+              flexGrow: 1,
+              p: 3,
+              paddingTop: '64px',
+              boxSizing: 'content-box',
+            }}
+          >
+            <AppBar position='fixed' open={open}>
+              <Toolbar>
+                <IconButton
+                  color='inherit'
+                  aria-label='open drawer'
+                  onClick={handleDrawerOpen}
+                  edge='start'
+                  sx={{
+                    marginRight: 5,
+                    ...(open && { display: 'none' }),
+                  }}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Button
+                  variant='contained'
+                  onClick={logout}
+                  color='secondary'
+                  sx={{ marginLeft: 'auto' }}
+                >
+                  Logout
+                </Button>
+              </Toolbar>
+            </AppBar>
+            {children}
+          </Box>
         </Box>
       </ThemeProvider>
     </ColorModeContext.Provider>

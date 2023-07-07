@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Input, Button, Modal, Text, Spacer } from '@nextui-org/react';
 
 export default function Register() {
@@ -9,6 +10,8 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [submissionStatus, setSubmissionStatus] = useState('');
   const [visible, setVisible] = useState(false);
+
+  const navigate = useNavigate();
 
   const closeHandler = () => {
     setVisible(false);
@@ -29,7 +32,9 @@ export default function Register() {
 
       if (response.status >= 200 && response.status < 300) {
         setSubmissionStatus(`${user.username} was successfully registered!`);
+
         setVisible(false);
+        navigate('/home');
       } else {
         throw new Error('User is already registered');
       }
