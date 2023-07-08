@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -156,16 +155,6 @@ export default function Sidebar({ children }: MiniDrawerProps) {
     localStorage.removeItem('accessToken');
     navigate('/');
   };
-
-  // const customTheme = useMemo(
-  //   () =>
-  //     createTheme({
-  //       palette: {
-  //         mode,
-  //       },
-  //     }),
-  //   [mode]
-  // );
 
   useEffect(() => {
     const fetchProfilePicture = async () => {

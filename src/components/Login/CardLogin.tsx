@@ -38,7 +38,7 @@ export default function CardLogin() {
       <Card
         css={{ width: '100%', height: 'auto' }}
         variant='flat'
-        className='custom-card' // Add custom CSS class
+        className='custom-card'
       >
         <Card.Image
           src={images[currentImageIndex]}
