@@ -49,7 +49,7 @@ export default function Login() {
       console.log(parsedToken);
       if (parsedToken.Role === 'Account Holder') {
         setUserId(parsedToken.Id);
-        navigate('/home');
+        navigate('/view-accounts');
       } else {
         setErrorMessage('Please register an account.');
       }

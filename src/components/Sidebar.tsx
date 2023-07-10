@@ -25,7 +25,8 @@ import AddCardIcon from '@mui/icons-material/AddCard';
 import PaidIcon from '@mui/icons-material/Paid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useState, useMemo, createContext } from 'react';
+import { useState, createContext } from 'react';
+// import { useMemo } from 'react';
 import Button from '@mui/material/Button';
 import { openDB } from 'idb';
 import profilePictureImage from '/Users/deshondixon/projects/revature/project2frontend/src/ant-high-resolution-logo-color-on-transparent-background_(4).png';
@@ -129,7 +130,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  // const [mode, setMode] = useState<'light' | 'dark'>('light');
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
   const handleDrawerOpen = () => {
@@ -140,16 +141,16 @@ export default function Sidebar({ children }: MiniDrawerProps) {
     setOpen(false);
   };
 
-  const toggleColorMode = () => {
-    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-  };
+  // const toggleColorMode = () => {
+  //   setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+  // };
 
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: toggleColorMode,
-    }),
-    []
-  );
+  // const colorMode = useMemo(
+  //   () => ({
+  //     toggleColorMode: toggleColorMode,
+  //   }),
+  //   []
+  // );
 
   const logout = () => {
     localStorage.removeItem('accessToken');
@@ -178,15 +179,15 @@ export default function Sidebar({ children }: MiniDrawerProps) {
     fetchProfilePicture();
   }, []);
 
-  const saveProfilePicture = async (profilePicture: string) => {
-    const db = await openDB('myDB', 1);
-    const transaction = db.transaction('profilePictures', 'readwrite');
-    const objectStore = transaction.objectStore('profilePictures');
-    objectStore.clear();
-    objectStore.add({ profilePicture });
+  // const saveProfilePicture = async (profilePicture: string) => {
+  //   const db = await openDB('myDB', 1);
+  //   const transaction = db.transaction('profilePictures', 'readwrite');
+  //   const objectStore = transaction.objectStore('profilePictures');
+  //   objectStore.clear();
+  //   objectStore.add({ profilePicture });
 
-    setProfilePicture(profilePicture);
-  };
+  //   setProfilePicture(profilePicture);
+  // };
 
   const SidebarItem: React.FC<{
     icon: React.ReactNode;
@@ -218,127 +219,127 @@ export default function Sidebar({ children }: MiniDrawerProps) {
   };
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        <Box sx={{ display: 'flex' }}>
-          <Drawer variant='permanent' open={open}>
-            <div className='flex items-center justify-between '>
-              <DrawerHeader></DrawerHeader>
-              <div>
-                <IconButton onClick={handleDrawerClose}>
-                  {theme.direction === 'rtl' ? (
-                    <ChevronLeftIcon />
-                  ) : (
-                    <ChevronLeftIcon />
-                  )}
-                </IconButton>
-              </div>
+    // <ColorModeContext.Provider value={colorMode}>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Box sx={{ display: 'flex' }}>
+        <Drawer variant='permanent' open={open}>
+          <div className='flex items-center justify-between '>
+            <DrawerHeader></DrawerHeader>
+            <div>
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === 'rtl' ? (
+                  <ChevronLeftIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
+              </IconButton>
             </div>
-            <Divider />
-            <Grid.Container gap={3}>
-              <Grid>
-                <Avatar
-                  key={profilePicture}
-                  css={{
-                    mw: '600px',
-                    height: open ? '22vh' : '2vh',
-                    width: open ? '22vh' : '2vh',
-                    transition: 'width 0.3s, height 0.3s',
+          </div>
+          <Divider />
+          <Grid.Container gap={3}>
+            <Grid>
+              <Avatar
+                key={profilePicture}
+                css={{
+                  mw: '600px',
+                  height: open ? '22vh' : '2vh',
+                  width: open ? '22vh' : '2vh',
+                  transition: 'width 0.3s, height 0.3s',
+                }}
+                zoomed
+                size='sm'
+                src={profilePicture || profilePictureImage}
+                alt='account holder'
+                color='gradient'
+                bordered
+                className='flex mx-auto rounded-full md:w-full cursor-none'
+                pointer
+              />
+            </Grid>
+          </Grid.Container>
+
+          <List>
+            <SidebarItem
+              icon={<AccountBalanceIcon />}
+              text='View Accounts'
+              to='/view-accounts'
+            />
+            <SidebarItem
+              icon={<PaymentsIcon />}
+              text='Withdraw'
+              to='/withdraw'
+            />
+            <SidebarItem icon={<PaidIcon />} text='Deposit' to='/deposit' />
+            <SidebarItem
+              icon={<CurrencyExchangeIcon />}
+              text='Transfer'
+              to='/transfer'
+            />
+          </List>
+          <Divider />
+          <List>
+            <SidebarItem
+              icon={<ReceiptLongIcon />}
+              text='Recent Transactions'
+              to='/recent-transactions'
+            />
+            <SidebarItem
+              icon={<AddCardIcon />}
+              text='Add Bank Account'
+              to='/register-account'
+            />
+            <SidebarItem
+              icon={<AccountCircleIcon />}
+              text='Update Profile'
+              to='/profile'
+            />
+          </List>
+        </Drawer>
+        <Box
+          component='main'
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            paddingTop: '64px',
+            boxSizing: 'content-box',
+          }}
+        >
+          <AppBar position='fixed' open={open}>
+            <Toolbar className='bg-grey-900'>
+              <div className='flex justify-center'>
+                <IconButton
+                  color='inherit'
+                  aria-label='open drawer'
+                  onClick={handleDrawerOpen}
+                  edge='start'
+                  sx={{
+                    justifyContent: 'center',
+                    marginRight: 5,
+                    ...(open && { display: 'none' }),
                   }}
-                  zoomed
-                  size='sm'
-                  src={profilePicture || profilePictureImage}
-                  alt='account holder'
-                  color='gradient'
-                  bordered
-                  className='flex mx-auto rounded-full md:w-full cursor-none'
-                  pointer
-                />
-              </Grid>
-            </Grid.Container>
+                >
+                  <MenuIcon />
+                </IconButton>
 
-            <List>
-              <SidebarItem
-                icon={<AccountBalanceIcon />}
-                text='View Accounts'
-                to='/view-accounts'
-              />
-              <SidebarItem
-                icon={<PaymentsIcon />}
-                text='Withdraw'
-                to='/withdraw'
-              />
-              <SidebarItem icon={<PaidIcon />} text='Deposit' to='/deposit' />
-              <SidebarItem
-                icon={<CurrencyExchangeIcon />}
-                text='Transfer'
-                to='/transfer'
-              />
-            </List>
-            <Divider />
-            <List>
-              <SidebarItem
-                icon={<ReceiptLongIcon />}
-                text='Recent Transactions'
-                to='/recent-transactions'
-              />
-              <SidebarItem
-                icon={<AddCardIcon />}
-                text='Add Bank Account'
-                to='/register-account'
-              />
-              <SidebarItem
-                icon={<AccountCircleIcon />}
-                text='Update Profile'
-                to='/profile'
-              />
-            </List>
-          </Drawer>
-          <Box
-            component='main'
-            sx={{
-              flexGrow: 1,
-              p: 3,
-              paddingTop: '64px',
-              boxSizing: 'content-box',
-            }}
-          >
-            <AppBar position='fixed' open={open}>
-              <Toolbar className='bg-grey-900'>
-                <div className='flex justify-center'>
-                  <IconButton
-                    color='inherit'
-                    aria-label='open drawer'
-                    onClick={handleDrawerOpen}
-                    edge='start'
-                    sx={{
-                      justifyContent: 'center',
-                      marginRight: 5,
-                      ...(open && { display: 'none' }),
-                    }}
-                  >
-                    <MenuIcon />
-                  </IconButton>
-
-                  {/* <Text h1 size={30} css={{}} weight='thin'>
+                {/* <Text h1 size={30} css={{}} weight='thin'>
                     Work Hard Plan For the Future
                   </Text> */}
-                </div>
-                <Button
-                  variant='contained'
-                  onClick={logout}
-                  color='secondary'
-                  sx={{ marginLeft: 'auto' }}
-                >
-                  Logout
-                </Button>
-              </Toolbar>
-            </AppBar>
-            {children}
-          </Box>
+              </div>
+              <Button
+                variant='contained'
+                onClick={logout}
+                color='secondary'
+                sx={{ marginLeft: 'auto' }}
+              >
+                Logout
+              </Button>
+            </Toolbar>
+          </AppBar>
+          {children}
         </Box>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+      </Box>
+    </ThemeProvider>
+    // </ColorModeContext.Provider>
   );
 }
