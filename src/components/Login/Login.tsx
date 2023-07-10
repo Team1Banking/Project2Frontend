@@ -125,7 +125,6 @@ export default function Login() {
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
-      // If access token exists, navigate to the desired page
       navigate('/home');
     }
   }, [navigate]);

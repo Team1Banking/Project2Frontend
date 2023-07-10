@@ -1,65 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Input, Button } from '@nextui-org/react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Button, Spacer, Text, Input } from '@nextui-org/react';
 
-function parseJwt(token: string) {
-  try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const decodedToken = atob(base64);
-    const parsedToken = JSON.parse(decodedToken);
-    return parsedToken.sub || parsedToken.Id || null;
-  } catch (error) {
-    console.error('Error parsing JWT token:', error);
-    return null;
-  }
-}
-
-export default function Withdraw() {
-  const { id } = useParams();
-  const [withdrawalAmount, setWithdrawalAmount] = useState(0);
-  const [accountType, setAccountType] = useState('');
+export default function Transfer() {
+  const [senderAccountId, setSenderAccountId] = useState('');
+  const [recipientAccountId, setRecipientAccountId] = useState('');
+  const [amount, setAmount] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [userId, setUserId] = useState('');
 
-  useEffect(() => {
-    const userData = localStorage.getItem('userData');
-    if (userData) {
-      const parsedUserData = JSON.parse(userData);
-      const accessToken = localStorage.getItem('accessToken');
-      if (accessToken) {
-        const parsedUserId = parseJwt(accessToken);
-        setUserId(parsedUserId);
-      }
-    }
-  }, []);
-
-  const handleWithdrawal = async () => {
+  const handleTransfer = async () => {
     try {
-      if (!userId) {
-        console.error('User ID not found.');
-        return;
-      }
+      const accessToken = localStorage.getItem('accessToken');
+      const url = 'http://localhost:8080/account/Transfer';
 
-      console.log('User ID:', userId);
-      console.log('Withdrawal Amount:', withdrawalAmount);
-      console.log('Account Type:', accountType);
+      const payload = {
+        amount: parseInt(amount),
+        recipientAccountId: parseInt(recipientAccountId),
+        senderAccountId: parseInt(senderAccountId),
+      };
 
-      const response = await axios.put(`http://localhost:8080/Withdraw/${id}`, {
-        userId,
-        accountType,
-        withdrawalAmount,
+      const response = await axios.put(url, payload, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
-      console.log('Response:', response.data);
+
+      setSuccessMessage('Transfer successful.');
+      console.log('Response data:', response.data);
     } catch (error) {
-      console.error('Error:', error);
+      console.error(error);
+      setErrorMessage('Transfer failed.');
     }
   };
 
-  console.log('Params ID:', id);
-  console.log('Withdrawal Amount:', withdrawalAmount);
-  console.log('Account Type:', accountType);
-  console.log('User ID:', userId);
+  function parseJwt(token: any) {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const decodedToken = atob(base64);
+      const parsedToken = JSON.parse(decodedToken);
+      return parsedToken;
+    } catch (error) {
+      console.error('Error parsing JWT token:', error);
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    const parsedToken = parseJwt(accessToken);
+    if (parsedToken && parsedToken.Role === 'Account Holder') {
+      setUserId(parsedToken.Id);
+    }
+  }, []);
 
   return (
     <>
@@ -71,34 +66,36 @@ export default function Withdraw() {
         }}
         weight='bold'
       >
-        Withdraw
+        Transfer
       </Text>
-      <div>
-        <label>
-          <input
-            type='radio'
-            value='checking'
-            checked={accountType === 'checking'}
-            onChange={() => setAccountType('checking')}
-          />
-          Checking
-        </label>
-        <label>
-          <input
-            type='radio'
-            value='savings'
-            checked={accountType === 'savings'}
-            onChange={() => setAccountType('savings')}
-          />
-          Savings
-        </label>
-      </div>
+      <Spacer y={1.6} />
       <Input
-        type='number'
-        value={withdrawalAmount}
-        onChange={(e) => setWithdrawalAmount(parseInt(e.target.value))}
+        label='Sender Account ID'
+        placeholder='Enter sender account ID'
+        value={senderAccountId}
+        onChange={(e) => setSenderAccountId(e.target.value)}
       />
-      <Button onPress={handleWithdrawal}>Withdraw</Button>
+      <Spacer y={0.8} />
+      <Input
+        label='Recipient Account ID'
+        placeholder='Enter recipient account ID'
+        value={recipientAccountId}
+        onChange={(e) => setRecipientAccountId(e.target.value)}
+      />
+      <Spacer y={0.8} />
+      <Input
+        label='Amount'
+        placeholder='Enter transfer amount'
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <Spacer y={0.8} />
+      <Button auto color='gradient' size='lg' shadow onClick={handleTransfer}>
+        Transfer
+      </Button>
+      <Spacer y={1.6} />
+      {errorMessage && <Text color='error'>{errorMessage}</Text>}
+      {successMessage && <Text color='success'>{successMessage}</Text>}
     </>
   );
 }
