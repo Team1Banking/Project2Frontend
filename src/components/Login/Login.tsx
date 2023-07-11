@@ -57,7 +57,7 @@ export default function Login() {
     } catch (error: any) {
       console.log(error);
       if (error.response) {
-        const { status, data } = error.response;
+        const { status } = error.response;
         if (status === 401) {
           setErrorMessage('Invalid username or password. Please try again.');
         } else {
@@ -96,7 +96,7 @@ export default function Login() {
     } catch (error: any) {
       console.log(error);
       if (error.response) {
-        const { status, data } = error.response;
+        const { status } = error.response;
         if (status === 401) {
           setErrorMessage('Invalid username or password. Please try again.');
         } else {
@@ -126,7 +126,7 @@ export default function Login() {
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
-      navigate('/home');
+      navigate('/view-accounts');
     }
   }, [navigate]);
 

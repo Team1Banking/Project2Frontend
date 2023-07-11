@@ -81,57 +81,60 @@ export default function Profile() {
   }
 
   return (
-    <Grid.Container className='flex justify-center p-6'>
-      <Grid xs={12} sm={10} md={8} lg={6} xl={4}>
-        <div className='p-6 text-center rounded-xl glass-background'>
-          <Avatar
-            css={{
-              width: '150px',
-              height: '150px',
-              transition: 'width 0.3s, height 0.3s',
-              objectFit: 'contain',
-            }}
-            zoomed
-            size='xl'
-            src={
-              profilePicture ||
-              '/ant-high-resolution-logo-color-on-transparent-background_(4).png'
-            }
-            alt='account holder'
-            color='gradient'
-            bordered
-            className='mx-auto mb-6 cursor-none'
-            pointer
-          />
+    <>
+      <Spacer />
+      <Grid.Container gap={2} justify='center' direction='row'>
+        <Grid xs={12} sm={10} md={8} lg={6} xl={4}>
+          <div className='p-6 text-center rounded-xl glass-background'>
+            <Avatar
+              css={{
+                width: '150px',
+                height: '150px',
+                transition: 'width 0.3s, height 0.3s',
+                objectFit: 'contain',
+              }}
+              zoomed
+              size='xl'
+              src={
+                profilePicture ||
+                '/ant-high-resolution-logo-color-on-transparent-background_(4).png'
+              }
+              alt='account holder'
+              color='gradient'
+              bordered
+              className='mx-auto mb-6 cursor-none'
+              pointer
+            />
 
-          <Text h1>
-            {user.firstName} {user.lastName}
-          </Text>
-          <Spacer />
-          <Badge>{user.Role}</Badge>
-          <Spacer y={2} />
-          <Text>Username: {user.sub}</Text>
-          <Text>Account Number: {user.iat}</Text>
-          <Spacer y={2} />
-          {errorMessage && <Text color='error'>{errorMessage}</Text>}
-          <Button
-            variant='contained'
-            color='secondary'
-            sx={{ marginLeft: 'auto' }}
-          >
-            <label htmlFor='profilePictureUpload' className='upload-button'>
-              Upload
-            </label>
-          </Button>
-          <input
-            type='file'
-            id='profilePictureUpload'
-            accept='image/*'
-            className='hidden'
-            onChange={handleProfilePictureUpload}
-          />
-        </div>
-      </Grid>
-    </Grid.Container>
+            <Text h1>
+              {user.firstName} {user.lastName}
+            </Text>
+            <Spacer />
+            <Badge>{user.Role}</Badge>
+            <Spacer y={2} />
+            <Text>Username: {user.sub}</Text>
+            <Text>Account Number: {user.iat}</Text>
+            <Spacer y={2} />
+            {errorMessage && <Text color='error'>{errorMessage}</Text>}
+            <Button
+              variant='contained'
+              color='secondary'
+              sx={{ marginLeft: 'auto' }}
+            >
+              <label htmlFor='profilePictureUpload' className='upload-button'>
+                Upload
+              </label>
+            </Button>
+            <input
+              type='file'
+              id='profilePictureUpload'
+              accept='image/*'
+              className='hidden'
+              onChange={handleProfilePictureUpload}
+            />
+          </div>
+        </Grid>
+      </Grid.Container>
+    </>
   );
 }
