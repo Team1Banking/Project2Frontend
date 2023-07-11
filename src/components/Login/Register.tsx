@@ -50,7 +50,7 @@ export default function Register() {
       <Spacer />
       <Button
         auto
-        color='warning'
+        color='gradient'
         size='lg'
         shadow
         onPress={() => setVisible(true)}

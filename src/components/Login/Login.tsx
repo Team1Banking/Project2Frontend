@@ -249,7 +249,7 @@ export default function Login() {
                 <Spacer />
                 <Button
                   auto
-                  color='secondary'
+                  color='gradient'
                   size='lg'
                   shadow
                   onPress={openModal}
