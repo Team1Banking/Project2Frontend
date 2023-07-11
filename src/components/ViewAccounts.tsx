@@ -124,7 +124,7 @@ export default function ViewAccounts() {
     <>
       <Spacer />
       <Grid.Container gap={2} className='flex justify-center w-screen pt-5'>
-        <Grid xs={12} md={6} lg={12}>
+        <Grid xs={12} md={6}>
           <Card
             isHoverable
             variant='bordered'

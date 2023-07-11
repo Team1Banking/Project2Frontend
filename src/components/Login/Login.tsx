@@ -197,8 +197,8 @@ export default function Login() {
             width={680}
             height={280}
             maxDelay={10000}
-            src='https://trello.com/1/cards/64a42c22be636349944b14f2/attachments/64a42d11e87c36360afa328d/download/ant-high-resolution-logo-color-on-transparent-background_(4).png'
-            alt='Default Image'
+            src='https://raw.githubusercontent.com/Team1Banking/Project2Frontend/main/src/ant-high-resolution-logo-color-on-transparent-background_(4).png'
+            alt='Ant Logo'
           />
 
           <Spacer y={2} />
