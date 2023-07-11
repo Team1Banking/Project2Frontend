@@ -9,6 +9,7 @@ import {
   Spacer,
   Modal,
   Checkbox,
+  Image,
 } from '@nextui-org/react';
 import CardLogin from './CardLogin';
 import Register from './Register';
@@ -189,28 +190,16 @@ export default function Login() {
       <Grid.Container gap={2} justify='center' style={{ marginTop: '70px' }}>
         <Grid direction='column'>
           <Spacer y={5} />
-          <Text
-            h1
-            size={30}
-            css={{
-              textGradient: '45deg, $purple600 -20%, $blue600 100%',
-            }}
-            weight='bold'
-          >
-            Welcome to MAD-J
-          </Text>
-          <Text
-            h1
-            size={70}
-            css={{
-              textGradient: '45deg, $purple600 -20%, $blue600 100%',
-            }}
-            weight='bold'
-          >
-            America's favorite
-            <br />
-            way to Bank.
-          </Text>
+
+          <Image
+            className='flex'
+            showSkeleton
+            width={680}
+            height={280}
+            maxDelay={10000}
+            src='https://trello.com/1/cards/64a42c22be636349944b14f2/attachments/64a42d11e87c36360afa328d/download/ant-high-resolution-logo-color-on-transparent-background_(4).png'
+            alt='Default Image'
+          />
 
           <Spacer y={2} />
           <div>

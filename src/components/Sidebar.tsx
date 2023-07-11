@@ -29,7 +29,7 @@ import { useState, createContext } from 'react';
 // import { useMemo } from 'react';
 import Button from '@mui/material/Button';
 import { openDB } from 'idb';
-import profilePictureImage from '/Users/deshondixon/projects/revature/project2frontend/src/ant-high-resolution-logo-color-on-transparent-background_(4).png';
+import profilePictureImage from '/Users/deshondixon/projects/revature/project2frontend/src/antUser.png';
 
 const drawerWidth = 240;
 

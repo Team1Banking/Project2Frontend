@@ -1,47 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Button, Spacer, Text, Input } from '@nextui-org/react';
+import { Text, Input, Button } from '@nextui-org/react';
+import axios, { AxiosError } from 'axios';
 
-export default function Transfer() {
-  const [senderAccountId, setSenderAccountId] = useState('');
-  const [recipientAccountId, setRecipientAccountId] = useState('');
-  const [amount, setAmount] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+function isAxiosError(error: any): error is AxiosError {
+  return error.isAxiosError;
+}
+
+export default function Withdraw() {
+  const [withdrawAmount, setWithdrawAmount] = useState(0);
+  const [accountType, setAccountType] = useState('');
   const [userId, setUserId] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleTransfer = async () => {
+  const handleWithdraw = async () => {
     try {
+      if (!userId) {
+        setErrorMessage('User ID not found.');
+        return;
+      }
+
+      console.log('User ID:', userId);
+      console.log('Withdraw Amount:', withdrawAmount);
+      console.log('Account Type:', accountType);
+
       const accessToken = localStorage.getItem('accessToken');
-      const url = 'http://localhost:8080/account/Transfer';
+      if (!accessToken) {
+        setErrorMessage('Access token not found.');
+        return;
+      }
 
-      const payload = {
-        amount: parseInt(amount),
-        recipientAccountId: parseInt(recipientAccountId),
-        senderAccountId: parseInt(senderAccountId),
-      };
-
-      const response = await axios.put(url, payload, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      setSuccessMessage('Transfer successful.');
-      console.log('Response data:', response.data);
+      const response = await axios.put(
+        `http://localhost:8080/account/Withdraw/${userId}`,
+        withdrawAmount,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log('Response:', response.data);
     } catch (error) {
-      console.error(error);
-      setErrorMessage('Transfer failed.');
+      console.error('Error:', error);
+      if (isAxiosError(error) && error.response) {
+        setErrorMessage(
+          'Error occurred while processing your request. Please try again later.'
+        );
+      }
     }
   };
 
-  function parseJwt(token: any) {
+  function parseJwt(token: string) {
     try {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       const decodedToken = atob(base64);
       const parsedToken = JSON.parse(decodedToken);
-      return parsedToken;
+      console.log('Parsed JWT:', parsedToken);
+
+      return parsedToken.Id || parsedToken.sub || null;
     } catch (error) {
       console.error('Error parsing JWT token:', error);
       return null;
@@ -49,10 +66,13 @@ export default function Transfer() {
   }
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    const parsedToken = parseJwt(accessToken);
-    if (parsedToken && parsedToken.Role === 'Account Holder') {
-      setUserId(parsedToken.Id);
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const accessToken = localStorage.getItem('accessToken');
+      if (accessToken) {
+        const parsedUserId = parseJwt(accessToken);
+        setUserId(parsedUserId);
+      }
     }
   }, []);
 
@@ -66,36 +86,37 @@ export default function Transfer() {
         }}
         weight='bold'
       >
-        Transfer
+        Withdraw
       </Text>
-      <Spacer y={1.6} />
+      {errorMessage && <div>{errorMessage}</div>}
+      <div>
+        <label>
+          <input
+            type='radio'
+            value='Checking'
+            checked={accountType === 'Checking'}
+            onChange={() => setAccountType('Checking')}
+          />
+          Checking
+        </label>
+        <label>
+          <input
+            type='radio'
+            value='Savings'
+            checked={accountType === 'Savings'}
+            onChange={() => setAccountType('Savings')}
+          />
+          Savings
+        </label>
+      </div>
       <Input
-        label='Sender Account ID'
-        placeholder='Enter sender account ID'
-        value={senderAccountId}
-        onChange={(e) => setSenderAccountId(e.target.value)}
+        type='number'
+        value={withdrawAmount}
+        onChange={(e) =>
+          setWithdrawAmount(Math.max(0, parseInt(e.target.value)))
+        }
       />
-      <Spacer y={0.8} />
-      <Input
-        label='Recipient Account ID'
-        placeholder='Enter recipient account ID'
-        value={recipientAccountId}
-        onChange={(e) => setRecipientAccountId(e.target.value)}
-      />
-      <Spacer y={0.8} />
-      <Input
-        label='Amount'
-        placeholder='Enter transfer amount'
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-      <Spacer y={0.8} />
-      <Button auto color='gradient' size='lg' shadow onClick={handleTransfer}>
-        Transfer
-      </Button>
-      <Spacer y={1.6} />
-      {errorMessage && <Text color='error'>{errorMessage}</Text>}
-      {successMessage && <Text color='success'>{successMessage}</Text>}
+      <Button onClick={handleWithdraw}>Withdraw</Button>
     </>
   );
 }

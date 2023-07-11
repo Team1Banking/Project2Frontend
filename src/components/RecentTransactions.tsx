@@ -96,7 +96,7 @@ export default function RecentTransactions() {
         }}
         weight='bold'
       >
-        Recent Transactions
+        All Transactions
       </Text>
 
       {errorMessage && <Text color='error'>{errorMessage}</Text>}
@@ -111,7 +111,9 @@ export default function RecentTransactions() {
         >
           <Table.Header>
             {columns.map((column) => (
-              <Table.Column key={column.key}>{column.label}</Table.Column>
+              <Table.Column allowsSorting key={column.key}>
+                {column.label}
+              </Table.Column>
             ))}
           </Table.Header>
           <Table.Body>
