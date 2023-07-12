@@ -8,7 +8,9 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import Sidebar from './components/Sidebar';
 import ViewAccounts from './components/ViewAccounts';
 import Transfer from './components/Transfer';
-import RecentTransactions from './components/RecentTransactions';
+import AllTransactions from './components/AllTransactions';
+import Expenses from './components/Expenses';
+import Income from './components/Income';
 import RegisterAccount from './components/RegisterAccount';
 import Profile from './components/Profile';
 
@@ -34,9 +36,11 @@ ReactDOM.render(
                     <Route path='/view-accounts' element={<ViewAccounts />} />
                     <Route path='/transfer' element={<Transfer />} />
                     <Route
-                      path='/recent-transactions'
-                      element={<RecentTransactions />}
+                      path='/all-transactions'
+                      element={<AllTransactions />}
                     />
+                    <Route path='/expenses' element={<Expenses />} />
+                    <Route path='/income' element={<Income />} />
                     <Route
                       path='/register-account'
                       element={<RegisterAccount />}

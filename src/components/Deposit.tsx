@@ -108,7 +108,7 @@ export default function Deposit({
         </Text>
         {errorMessage && <div>{errorMessage}</div>}
         <div>
-          <label>
+          {/* <label>
             <input
               type='radio'
               value='Checking'
@@ -116,9 +116,9 @@ export default function Deposit({
               onChange={() => setAccountType('Checking')}
             />
             Checking
-          </label>
+          </label> */}
           <Spacer />
-          <label>
+          {/* <label>
             <input
               type='radio'
               value='Savings'
@@ -126,7 +126,7 @@ export default function Deposit({
               onChange={() => setAccountType('Savings')}
             />
             Savings
-          </label>
+          </label> */}
         </div>
         <Spacer />
         <Input

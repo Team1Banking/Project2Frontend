@@ -34,7 +34,7 @@ export default function Register() {
         setSubmissionStatus(`${user.username} was successfully registered!`);
 
         setVisible(false);
-        navigate('/home');
+        navigate('/');
       } else {
         throw new Error('User is already registered');
       }

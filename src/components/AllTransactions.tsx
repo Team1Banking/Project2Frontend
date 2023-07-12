@@ -11,7 +11,7 @@ interface Transaction {
   [key: string]: number | string;
 }
 
-export default function RecentTransactions() {
+export default function AllTransactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [userId, setUserId] = useState('');
@@ -36,8 +36,15 @@ export default function RecentTransactions() {
         },
       });
 
-      setTransactions(response.data);
-      console.log('Transactions:', response.data);
+      const uniqueTransactions = response.data.filter(
+        (transaction: Transaction, index: number, self: Transaction[]) =>
+          self.findIndex(
+            (t) => t.transactionId === transaction.transactionId
+          ) === index
+      );
+
+      setTransactions(uniqueTransactions);
+      console.log('Transactions:', uniqueTransactions);
     } catch (error) {
       console.error(error);
       setErrorMessage('Failed to fetch transactions.');

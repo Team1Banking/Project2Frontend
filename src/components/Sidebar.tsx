@@ -28,6 +28,8 @@ import Button from '@mui/material/Button';
 import { openDB } from 'idb';
 import profilePictureImage from './antUser.png';
 import Switch from '@mui/material/Switch';
+import PaidIcon from '@mui/icons-material/Paid';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 // const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
@@ -140,7 +142,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
     palette: {
       mode: 'light',
       primary: {
-        main: '#3f51b5',
+        main: '#4352b7',
       },
       secondary: {
         main: '#2d00f5',
@@ -150,8 +152,8 @@ export default function Sidebar({ children }: MiniDrawerProps) {
         secondary: '#616161',
       },
       background: {
-        default: '#00e1ffa8',
-        paper: '#8c00ff',
+        default: '#85bffc',
+        paper: '#ffffff',
       },
     },
   });
@@ -317,8 +319,16 @@ export default function Sidebar({ children }: MiniDrawerProps) {
             <SidebarItem
               icon={<ReceiptLongIcon />}
               text='All Transactions'
-              to='/recent-transactions'
+              to='/all-transactions'
             />
+            <Spacer y={0.5} />
+            <SidebarItem
+              icon={<ShoppingCartIcon />}
+              text='Expenses'
+              to='/expenses'
+            />
+            <Spacer y={0.5} />
+            <SidebarItem icon={<PaidIcon />} text='Income' to='/income' />
             <Spacer y={0.5} />
             <SidebarItem
               icon={<AddCardIcon />}

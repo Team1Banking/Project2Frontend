@@ -150,7 +150,7 @@ export default function Profile() {
                           onMouseLeave={() => setIsHovered(false)}
                           className='cursor-pointer'
                         >
-                          {isHovered ? password : '🔒'}
+                          {isHovered ? password : ''}
                         </h3>
                       </div>
                     </div>
@@ -165,7 +165,7 @@ export default function Profile() {
               <Grid.Container gap={2} className='flex'>
                 <Spacer y={6} />
                 <div className='flex'>
-                  <div className='flex flex-col w-56'>
+                  {/* <div className='flex flex-col w-56'>
                     <Input
                       clearable
                       bordered
@@ -217,7 +217,7 @@ export default function Profile() {
                       bordered
                       labelPlaceholder='Update Mailing Address'
                     />
-                  </div>
+                  </div> */}
                 </div>
               </Grid.Container>
             </Card.Body>
