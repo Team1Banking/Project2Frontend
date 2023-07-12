@@ -13,23 +13,22 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { Avatar, Grid } from '@nextui-org/react';
+import { Avatar, Grid, Text, Spacer } from '@nextui-org/react';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import PaymentsIcon from '@mui/icons-material/Payments';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import AddCardIcon from '@mui/icons-material/AddCard';
-import PaidIcon from '@mui/icons-material/Paid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState, createContext } from 'react';
 // import { useMemo } from 'react';
 import Button from '@mui/material/Button';
 import { openDB } from 'idb';
-import profilePictureImage from '/Users/deshondixon/projects/revature/project2frontend/src/antUser.png';
+import profilePictureImage from './antUser.png';
+
+// const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
 const drawerWidth = 240;
 
@@ -129,6 +128,7 @@ interface MiniDrawerProps {
 export default function Sidebar({ children }: MiniDrawerProps) {
   const navigate = useNavigate();
   const theme = useTheme();
+  const accessToken = localStorage.getItem('accessToken');
   const [open, setOpen] = useState(false);
   // const [mode, setMode] = useState<'light' | 'dark'>('light');
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
@@ -218,6 +218,43 @@ export default function Sidebar({ children }: MiniDrawerProps) {
     );
   };
 
+  function parseJwt(token: string) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+    console.log('jsonPayload:', jsonPayload);
+    return JSON.parse(jsonPayload);
+  }
+
+  console.log('accessToken:', accessToken);
+
+  const user = accessToken ? parseJwt(accessToken) : null;
+
+  useEffect(() => {
+    const loadProfilePicture = async () => {
+      const db = await openDB('myDatabase', 1, {
+        upgrade(db) {
+          db.createObjectStore('profiles');
+        },
+      });
+      const tx = db.transaction('profiles', 'readonly');
+      const store = tx.objectStore('profiles');
+      const picture = await store.get(user?.sub || '');
+      setProfilePicture(picture || null);
+    };
+
+    if (user) {
+      loadProfilePicture();
+    }
+  }, [user]);
+
   return (
     // <ColorModeContext.Provider value={colorMode}>
     <ThemeProvider theme={darkTheme}>
@@ -225,7 +262,6 @@ export default function Sidebar({ children }: MiniDrawerProps) {
       <Box sx={{ display: 'flex' }}>
         <Drawer variant='permanent' open={open}>
           <div className='flex items-center justify-between '>
-            <DrawerHeader></DrawerHeader>
             <div>
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === 'rtl' ? (
@@ -235,8 +271,10 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                 )}
               </IconButton>
             </div>
+            <DrawerHeader></DrawerHeader>
           </div>
           <Divider />
+
           <Grid.Container gap={3}>
             <Grid>
               <Avatar
@@ -258,27 +296,20 @@ export default function Sidebar({ children }: MiniDrawerProps) {
               />
             </Grid>
           </Grid.Container>
-
           <List>
             <SidebarItem
               icon={<AccountBalanceIcon />}
               text='View Accounts'
               to='/view-accounts'
             />
-            <SidebarItem
-              icon={<PaymentsIcon />}
-              text='Withdraw'
-              to='/withdraw'
-            />
-            <SidebarItem icon={<PaidIcon />} text='Deposit' to='/deposit' />
-            <SidebarItem
-              icon={<CurrencyExchangeIcon />}
-              text='Transfer'
-              to='/transfer'
-            />
           </List>
           <Divider />
           <List>
+            <SidebarItem
+              icon={<ReceiptLongIcon />}
+              text='Transfer'
+              to='/transfer'
+            />
             <SidebarItem
               icon={<ReceiptLongIcon />}
               text='Recent Transactions'
@@ -322,9 +353,11 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                   <MenuIcon />
                 </IconButton>
 
-                {/* <Text h1 size={30} css={{}} weight='thin'>
-                    Work Hard Plan For the Future
-                  </Text> */}
+                <Spacer x={2} />
+                <Text h1 size={25} css={{}} weight='thin' className='pt-2'>
+                  {' '}
+                  Welcome, {user.firstName} {user.lastName}!{' '}
+                </Text>
               </div>
               <Button
                 variant='contained'

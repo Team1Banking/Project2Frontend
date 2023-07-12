@@ -1,12 +1,31 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
 import React, { useState, useEffect } from 'react';
-import { Text, Input, Button } from '@nextui-org/react';
+import { Text, Input, Button, Spacer } from '@nextui-org/react';
 import axios, { AxiosError } from 'axios';
+import Account from './ViewAccounts';
+import './Profile.css';
 
 function isAxiosError(error: any): error is AxiosError {
   return error.isAxiosError;
 }
 
-export default function Withdraw() {
+interface Account {
+  acctId: number;
+  acctType: string;
+  accoutValue: number;
+}
+
+interface WithdrawProps {
+  accountId: number;
+  account: Account;
+  onUpdateBalance: (newBalance: number) => void;
+}
+
+export default function Withdraw({
+  accountId,
+  account,
+  onUpdateBalance,
+}: WithdrawProps) {
   const [withdrawAmount, setWithdrawAmount] = useState(0);
   const [accountType, setAccountType] = useState('');
   const [userId, setUserId] = useState('');
@@ -78,45 +97,50 @@ export default function Withdraw() {
 
   return (
     <>
-      <Text
-        h1
-        size={40}
-        css={{
-          textGradient: '45deg, $yellow600 -20%, $red600 100%',
-        }}
-        weight='bold'
-      >
-        Withdraw
-      </Text>
-      {errorMessage && <div>{errorMessage}</div>}
-      <div>
-        <label>
-          <input
-            type='radio'
-            value='Checking'
-            checked={accountType === 'Checking'}
-            onChange={() => setAccountType('Checking')}
-          />
-          Checking
-        </label>
-        <label>
-          <input
-            type='radio'
-            value='Savings'
-            checked={accountType === 'Savings'}
-            onChange={() => setAccountType('Savings')}
-          />
-          Savings
-        </label>
+      <div className='flex flex-col items-center justify-center '>
+        <Text
+          h1
+          size={40}
+          css={{
+            textGradient: '45deg, $yellow600 -20%, $red600 100%',
+          }}
+          weight='bold'
+        >
+          Withdraw
+        </Text>
+        {errorMessage && <div>{errorMessage}</div>}
+        <div>
+          <label>
+            <input
+              type='radio'
+              value='Checking'
+              checked={accountType === 'Checking'}
+              onChange={() => setAccountType('Checking')}
+            />
+            Checking
+          </label>
+          <Spacer />
+          <label>
+            <input
+              type='radio'
+              value='Savings'
+              checked={accountType === 'Savings'}
+              onChange={() => setAccountType('Savings')}
+            />
+            Savings
+          </label>
+        </div>
+        <Spacer />
+        <Input
+          type='number'
+          value={withdrawAmount}
+          onChange={(e) =>
+            setWithdrawAmount(Math.max(0, parseInt(e.target.value)))
+          }
+        />
+        <Spacer />
+        <Button onClick={handleWithdraw}>Withdraw</Button>
       </div>
-      <Input
-        type='number'
-        value={withdrawAmount}
-        onChange={(e) =>
-          setWithdrawAmount(Math.max(0, parseInt(e.target.value)))
-        }
-      />
-      <Button onClick={handleWithdraw}>Withdraw</Button>
     </>
   );
 }

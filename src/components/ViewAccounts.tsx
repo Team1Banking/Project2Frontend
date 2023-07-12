@@ -1,6 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Text, Grid, Card, Spacer, Table } from '@nextui-org/react';
+import {
+  Text,
+  Grid,
+  Card,
+  Spacer,
+  Table,
+  Modal,
+  Button,
+} from '@nextui-org/react';
 import axios from 'axios';
+import Withdraw from './Withdraw';
+import Deposit from './Deposit';
+import './Profile.css';
 
 interface Account {
   acctId: number;
@@ -21,6 +32,9 @@ export default function ViewAccounts() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [userId, setUserId] = useState('');
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+  const [transferAccount, setTransferAccount] = useState<string>('');
+  const [transferAmount, setTransferAmount] = useState<number>(0);
 
   const columns = [
     {
@@ -44,43 +58,6 @@ export default function ViewAccounts() {
       label: 'Transaction Type',
     },
   ];
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    const parsedToken = parseJwt(accessToken);
-    if (parsedToken && parsedToken.Role === 'Account Holder') {
-      setUserId(parsedToken.Id);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (userId) {
-      const fetchAccounts = async () => {
-        const url = `http://localhost:8080/user/${userId}`;
-        const accessToken = localStorage.getItem('accessToken');
-
-        try {
-          const response = await axios.get<Account[]>(url, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-
-          const filteredAccounts = response.data.filter(
-            (account) =>
-              account.acctType === 'Checking' || account.acctType === 'Savings'
-          );
-
-          setAccounts(filteredAccounts);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
-      fetchAccounts();
-      fetchTransactions();
-    }
-  }, [userId]);
 
   const fetchTransactions = useCallback(async () => {
     try {
@@ -120,13 +97,76 @@ export default function ViewAccounts() {
     (account) => account.acctType === 'Savings'
   );
 
+  const openAccountModal = (account: Account) => {
+    console.log('openAccountModal is called with account: ', account);
+    setSelectedAccount(account);
+  };
+
+  useEffect(() => {
+    console.log('selectedAccount has changed: ', selectedAccount);
+  }, [selectedAccount]);
+
+  const closeAccountModal = () => {
+    setSelectedAccount(null);
+  };
+
+  const fetchAccounts = useCallback(async () => {
+    const url = `http://localhost:8080/user/${userId}`;
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const response = await axios.get<Account[]>(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const filteredAccounts = response.data.filter(
+        (account) =>
+          account.acctType === 'Checking' || account.acctType === 'Savings'
+      );
+
+      setAccounts(filteredAccounts);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchAccounts();
+      fetchTransactions();
+    }
+  }, [userId, fetchTransactions, fetchAccounts]);
+
+  const updateAccounts = useCallback(async () => {
+    await fetchAccounts();
+  }, [fetchAccounts]);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    const parsedToken = parseJwt(accessToken);
+    if (parsedToken && parsedToken.Role === 'Account Holder') {
+      setUserId(parsedToken.Id);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedAccount) {
+      const updatedAccounts = accounts.map((account) =>
+        account.acctId === selectedAccount.acctId ? selectedAccount : account
+      );
+      setAccounts(updatedAccounts);
+    }
+  }, [selectedAccount, accounts]);
+
   return (
     <>
       <Spacer />
       <Grid.Container gap={2} className='flex justify-center w-screen pt-5'>
         <Grid xs={12} md={6}>
           <Card
-            isHoverable
+            className='flex-row justify-evenly '
             variant='bordered'
             css={{
               height: '400px',
@@ -151,18 +191,71 @@ export default function ViewAccounts() {
             </Text>
             <Card.Body>
               {checkingAccounts.map((account) => (
-                <div key={account.acctId} style={{ marginTop: '16px' }}>
-                  <Text>Account ID: {account.acctId}</Text>
-                  <Text>Account Type: {account.acctType}</Text>
-                  <Text>Account Balance: {account.accoutValue}</Text>
-                </div>
+                <Card
+                  className='cursor-pointer '
+                  isHoverable
+                  key={account.acctId}
+                  css={{
+                    background: 'rgba(255, 255, 255, 0.035)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.09)',
+                    borderRadius: '8px',
+                    padding: '16px',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                >
+                  <div
+                    className='flex justify-between'
+                    onClick={() => openAccountModal(account)}
+                  >
+                    <div>
+                      <Text
+                        h2
+                        size={20}
+                        css={{
+                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textAlign: 'center',
+                        }}
+                        weight='bold'
+                      >
+                        Account ID: {account.acctId}
+                      </Text>
+                    </div>
+                    <div>
+                      <Text
+                        h2
+                        size={20}
+                        css={{
+                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textAlign: 'center',
+                        }}
+                        weight='bold'
+                      >
+                        {account.acctType}
+                      </Text>
+                    </div>
+                    <div>
+                      <Text
+                        h2
+                        size={20}
+                        css={{
+                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textAlign: 'center',
+                        }}
+                        weight='bold'
+                      >
+                        Balance: {account.accoutValue}
+                      </Text>
+                    </div>
+                  </div>
+                </Card>
               ))}
             </Card.Body>
           </Card>
         </Grid>
         <Grid xs={12} md={6}>
           <Card
-            isHoverable
+            className='flex-row justify-evenly'
             variant='bordered'
             css={{
               height: '400px',
@@ -187,11 +280,64 @@ export default function ViewAccounts() {
             </Text>
             <Card.Body>
               {savingsAccounts.map((account) => (
-                <div key={account.acctId} style={{ marginTop: '16px' }}>
-                  <Text>Account ID: {account.acctId}</Text>
-                  <Text>Account Type: {account.acctType}</Text>
-                  <Text>Account Balance: {account.accoutValue}</Text>
-                </div>
+                <Card
+                  className='cursor-pointer '
+                  key={account.acctId}
+                  isHoverable
+                  css={{
+                    background: 'rgba(255, 255, 255, 0.035)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.09)',
+                    borderRadius: '8px',
+                    padding: '16px',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                >
+                  <div
+                    className='flex justify-between'
+                    onClick={() => openAccountModal(account)}
+                  >
+                    <div>
+                      <Text
+                        h2
+                        size={20}
+                        css={{
+                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textAlign: 'center',
+                        }}
+                        weight='bold'
+                      >
+                        Account ID: {account.acctId}
+                      </Text>
+                    </div>
+                    <div>
+                      <Text
+                        h2
+                        size={20}
+                        css={{
+                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textAlign: 'center',
+                        }}
+                        weight='bold'
+                      >
+                        {account.acctType}
+                      </Text>
+                    </div>
+                    <div>
+                      <Text
+                        h2
+                        size={20}
+                        css={{
+                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textAlign: 'center',
+                        }}
+                        weight='bold'
+                      >
+                        Balance: {account.accoutValue}
+                      </Text>
+                    </div>
+                  </div>
+                </Card>
               ))}
             </Card.Body>
           </Card>
@@ -250,6 +396,137 @@ export default function ViewAccounts() {
           </Card>
         </Grid>
       </Grid.Container>
+
+      <Modal
+        open={selectedAccount !== null}
+        blur
+        onClose={closeAccountModal}
+        css={{
+          maxWidth: '1500vw',
+          maxHeight: '90vh',
+          width: '1000px',
+          height: 'auto',
+          background: 'rgba(39, 39, 39, 0.293)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '30px',
+          padding: '16px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          margin: 'auto',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      >
+        {selectedAccount && (
+          <>
+            <Modal.Header>
+              <Text h2>Account Details</Text>
+            </Modal.Header>
+            <Spacer />
+            <Modal.Body>
+              <div className='flex flex-row items-center justify-evenly '>
+                <div className='glass-background'>
+                  <Deposit
+                    accountId={selectedAccount!.acctId}
+                    account={selectedAccount!}
+                    onUpdateBalance={(newBalance) => {
+                      setSelectedAccount((prevAccount) => {
+                        if (prevAccount) {
+                          return {
+                            ...prevAccount,
+                            accoutValue: newBalance,
+                          };
+                        }
+                        return null;
+                      });
+                      updateAccounts();
+                      fetchTransactions();
+                    }}
+                  />
+                </div>
+                <Spacer />
+                <div className='glass-background'>
+                  <Withdraw
+                    accountId={selectedAccount!.acctId}
+                    account={selectedAccount!}
+                    onUpdateBalance={(newBalance) => {
+                      setSelectedAccount((prevAccount) => {
+                        if (prevAccount) {
+                          return {
+                            ...prevAccount,
+                            accoutValue: newBalance,
+                          };
+                        }
+                        return null;
+                      });
+                      updateAccounts();
+                      fetchTransactions();
+                    }}
+                  />
+                </div>
+              </div>
+              <Spacer y={3} />
+              <div className='flex flex-col '>
+                <div className='flex items-center justify-center glass-background'>
+                  <h1>Transfer</h1>
+                </div>
+                <Spacer />
+
+                <div className='flex flex-row justify-center'>
+                  <div>
+                    <Text
+                      h2
+                      size={20}
+                      css={{
+                        textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                        textAlign: 'center',
+                      }}
+                      weight='bold'
+                    >
+                      Account ID: {selectedAccount.acctId}
+                    </Text>
+                  </div>
+                  <Spacer />
+                  <div>
+                    <Text
+                      h2
+                      size={20}
+                      css={{
+                        textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                        textAlign: 'center',
+                      }}
+                      weight='bold'
+                    >
+                      {selectedAccount.acctType}
+                    </Text>
+                  </div>
+                  <Spacer />
+                  <div>
+                    <Text
+                      h2
+                      size={20}
+                      css={{
+                        textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                        textAlign: 'center',
+                      }}
+                      weight='bold'
+                    >
+                      Balance: {selectedAccount.accoutValue}
+                    </Text>
+                  </div>
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button color='success' onClick={closeAccountModal}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </>
+        )}
+      </Modal>
     </>
   );
 }

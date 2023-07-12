@@ -7,8 +7,6 @@ import { createTheme, NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import Sidebar from './components/Sidebar';
 import ViewAccounts from './components/ViewAccounts';
-import Withdraw from './components/Withdraw';
-import Deposit from './components/Deposit';
 import Transfer from './components/Transfer';
 import RecentTransactions from './components/RecentTransactions';
 import RegisterAccount from './components/RegisterAccount';
@@ -34,8 +32,6 @@ ReactDOM.render(
                 <Sidebar>
                   <Routes>
                     <Route path='/view-accounts' element={<ViewAccounts />} />
-                    <Route path='/withdraw' element={<Withdraw />} />
-                    <Route path='/deposit' element={<Deposit />} />
                     <Route path='/transfer' element={<Transfer />} />
                     <Route
                       path='/recent-transactions'

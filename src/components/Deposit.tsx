@@ -1,12 +1,29 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
 import React, { useState, useEffect } from 'react';
-import { Text, Input, Button } from '@nextui-org/react';
+import { Text, Input, Button, Spacer } from '@nextui-org/react';
 import axios, { AxiosError } from 'axios';
+import Account from './ViewAccounts';
 
 function isAxiosError(error: any): error is AxiosError {
   return error.isAxiosError;
 }
+interface Account {
+  acctId: number;
+  acctType: string;
+  accoutValue: number;
+}
 
-export default function Deposit() {
+interface DepositProps {
+  accountId: number;
+  account: Account;
+  onUpdateBalance: (newBalance: number) => void;
+}
+
+export default function Deposit({
+  accountId,
+  account,
+  onUpdateBalance,
+}: DepositProps) {
   const [depositAmount, setDepositAmount] = useState(0);
   const [accountType, setAccountType] = useState('');
   const [userId, setUserId] = useState('');
@@ -78,45 +95,50 @@ export default function Deposit() {
 
   return (
     <>
-      <Text
-        h1
-        size={40}
-        css={{
-          textGradient: '45deg, $yellow600 -20%, $red600 100%',
-        }}
-        weight='bold'
-      >
-        Deposit
-      </Text>
-      {errorMessage && <div>{errorMessage}</div>}
-      <div>
-        <label>
-          <input
-            type='radio'
-            value='Checking'
-            checked={accountType === 'Checking'}
-            onChange={() => setAccountType('Checking')}
-          />
-          Checking
-        </label>
-        <label>
-          <input
-            type='radio'
-            value='Savings'
-            checked={accountType === 'Savings'}
-            onChange={() => setAccountType('Savings')}
-          />
-          Savings
-        </label>
+      <div className='flex flex-col items-center justify-center '>
+        <Text
+          h1
+          size={40}
+          css={{
+            textGradient: '45deg, $yellow600 -20%, $red600 100%',
+          }}
+          weight='bold'
+        >
+          Deposit
+        </Text>
+        {errorMessage && <div>{errorMessage}</div>}
+        <div>
+          <label>
+            <input
+              type='radio'
+              value='Checking'
+              checked={accountType === 'Checking'}
+              onChange={() => setAccountType('Checking')}
+            />
+            Checking
+          </label>
+          <Spacer />
+          <label>
+            <input
+              type='radio'
+              value='Savings'
+              checked={accountType === 'Savings'}
+              onChange={() => setAccountType('Savings')}
+            />
+            Savings
+          </label>
+        </div>
+        <Spacer />
+        <Input
+          type='number'
+          value={depositAmount}
+          onChange={(e) =>
+            setDepositAmount(Math.max(0, parseInt(e.target.value)))
+          }
+        />
+        <Spacer />
+        <Button onClick={handleDeposit}>Deposit</Button>
       </div>
-      <Input
-        type='number'
-        value={depositAmount}
-        onChange={(e) =>
-          setDepositAmount(Math.max(0, parseInt(e.target.value)))
-        }
-      />
-      <Button onClick={handleDeposit}>Deposit</Button>
     </>
   );
 }
