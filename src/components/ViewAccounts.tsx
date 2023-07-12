@@ -224,7 +224,7 @@ export default function ViewAccounts() {
               h2
               size={40}
               css={{
-                textGradient: '45deg, $pink600 -20%, $purple600 100%',
+                textGradient: '45deg, $blue800 -20%, $purple800 100%',
                 textAlign: 'center',
               }}
               weight='bold'
@@ -255,7 +255,7 @@ export default function ViewAccounts() {
                         h2
                         size={20}
                         css={{
-                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textGradient: '45deg, $blue800 -20%, $purple800 100%',
                           textAlign: 'center',
                         }}
                         weight='bold'
@@ -268,7 +268,7 @@ export default function ViewAccounts() {
                         h2
                         size={20}
                         css={{
-                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textGradient: '45deg, $blue800 -20%, $purple800 100%',
                           textAlign: 'center',
                         }}
                         weight='bold'
@@ -281,7 +281,7 @@ export default function ViewAccounts() {
                         h2
                         size={20}
                         css={{
-                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textGradient: '45deg, $blue800 -20%, $purple800 100%',
                           textAlign: 'center',
                         }}
                         weight='bold'
@@ -313,7 +313,7 @@ export default function ViewAccounts() {
               h2
               size={40}
               css={{
-                textGradient: '45deg, $pink600 -20%, $purple600 100%',
+                textGradient: '45deg, $blue800 -20%, $purple800 100%',
                 textAlign: 'center',
               }}
               weight='bold'
@@ -344,7 +344,7 @@ export default function ViewAccounts() {
                         h2
                         size={20}
                         css={{
-                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textGradient: '45deg, $blue800 -20%, $purple800 100%',
                           textAlign: 'center',
                         }}
                         weight='bold'
@@ -357,7 +357,7 @@ export default function ViewAccounts() {
                         h2
                         size={20}
                         css={{
-                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textGradient: '45deg, $blue800 -20%, $purple800 100%',
                           textAlign: 'center',
                         }}
                         weight='bold'
@@ -370,7 +370,7 @@ export default function ViewAccounts() {
                         h2
                         size={20}
                         css={{
-                          textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                          textGradient: '45deg, $blue800 -20%, $purple800 100%',
                           textAlign: 'center',
                         }}
                         weight='bold'
@@ -402,7 +402,7 @@ export default function ViewAccounts() {
               h2
               size={40}
               css={{
-                textGradient: '45deg, $pink600 -20%, $purple600 100%',
+                textGradient: '45deg, $blue800 -20%, $purple800 100%',
                 textAlign: 'center',
               }}
               weight='bold'
@@ -564,7 +564,7 @@ export default function ViewAccounts() {
                       h2
                       size={20}
                       css={{
-                        textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                        textGradient: '45deg, $blue800 -20%, $purple800 100%',
                         textAlign: 'center',
                       }}
                       weight='bold'
@@ -578,7 +578,7 @@ export default function ViewAccounts() {
                       h2
                       size={20}
                       css={{
-                        textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                        textGradient: '45deg, $blue800 -20%, $purple800 100%',
                         textAlign: 'center',
                       }}
                       weight='bold'
@@ -592,7 +592,7 @@ export default function ViewAccounts() {
                       h2
                       size={20}
                       css={{
-                        textGradient: '45deg, $yellow600 -20%, $red600 100%',
+                        textGradient: '45deg, $blue800 -20%, $purple800 100%',
                         textAlign: 'center',
                       }}
                       weight='bold'

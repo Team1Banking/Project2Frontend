@@ -95,8 +95,7 @@ export default function Profile() {
           h1
           size={40}
           css={{
-            textGradient: '45deg, $pink600 -20%, $purple600 100%',
-
+            textGradient: '45deg, $blue800 -20%, $purple800 100%',
             paddingLeft: 15,
           }}
           weight='bold'

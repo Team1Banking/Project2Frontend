@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import { Text, Table, Card } from '@nextui-org/react';
+import { Text, Table } from '@nextui-org/react';
 
 interface Transaction {
   transactionId: number;
@@ -88,63 +88,48 @@ export default function RecentTransactions() {
 
   return (
     <>
-      <Card
-        isHoverable
-        variant='bordered'
+      <Text
+        h2
+        size={40}
         css={{
-          height: '400px',
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.5)',
-          borderRadius: '8px',
-          padding: '16px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          textGradient: '45deg, $blue800 -20%, $purple800 100%',
+          textAlign: 'center',
         }}
+        weight='bold'
       >
-        <Text
-          h2
-          size={40}
-          css={{
-            textGradient: '45deg, $pink600 -20%, $purple600 100%',
-            textAlign: 'center',
-          }}
-          weight='bold'
-        >
-          All Transactions
-        </Text>
+        All Transactions
+      </Text>
 
-        {errorMessage && <Text color='error'>{errorMessage}</Text>}
-        <Card.Body>
-          {transactions.length > 0 ? (
-            <Table
-              aria-label='Transactions table'
-              css={{
-                height: 'auto',
-                minWidth: '100%',
-              }}
-            >
-              <Table.Header>
+      {errorMessage && <Text color='error'>{errorMessage}</Text>}
+
+      {transactions.length > 0 ? (
+        <Table
+          aria-label='Transactions table'
+          css={{
+            height: 'auto',
+            minWidth: '100%',
+          }}
+        >
+          <Table.Header>
+            {columns.map((column) => (
+              <Table.Column key={column.key}>{column.label}</Table.Column>
+            ))}
+          </Table.Header>
+          <Table.Body>
+            {transactions.map((transaction) => (
+              <Table.Row key={transaction.transactionId}>
                 {columns.map((column) => (
-                  <Table.Column key={column.key}>{column.label}</Table.Column>
+                  <Table.Cell key={column.key}>
+                    {transaction[column.key]}
+                  </Table.Cell>
                 ))}
-              </Table.Header>
-              <Table.Body>
-                {transactions.map((transaction) => (
-                  <Table.Row key={transaction.transactionId}>
-                    {columns.map((column) => (
-                      <Table.Cell key={column.key}>
-                        {transaction[column.key]}
-                      </Table.Cell>
-                    ))}
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
-          ) : (
-            <Text>No transactions available.</Text>
-          )}
-        </Card.Body>
-      </Card>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      ) : (
+        <Text>No transactions available.</Text>
+      )}
     </>
   );
 }

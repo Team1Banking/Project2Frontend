@@ -23,10 +23,11 @@ import AddCardIcon from '@mui/icons-material/AddCard';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState, createContext } from 'react';
-// import { useMemo } from 'react';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import Button from '@mui/material/Button';
 import { openDB } from 'idb';
 import profilePictureImage from './antUser.png';
+import Switch from '@mui/material/Switch';
 
 // const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
@@ -107,12 +108,6 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
-
 interface ColorModeContextProps {
   toggleColorMode: () => void;
 }
@@ -130,7 +125,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
   const theme = useTheme();
   const accessToken = localStorage.getItem('accessToken');
   const [open, setOpen] = useState(false);
-  // const [mode, setMode] = useState<'light' | 'dark'>('light');
+  const [themeMode, setThemeMode] = useState('dark');
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
   const handleDrawerOpen = () => {
@@ -141,16 +136,35 @@ export default function Sidebar({ children }: MiniDrawerProps) {
     setOpen(false);
   };
 
-  // const toggleColorMode = () => {
-  //   setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-  // };
+  const lightTheme = createTheme({
+    palette: {
+      mode: 'light',
+      primary: {
+        main: '#3f51b5',
+      },
+      secondary: {
+        main: '#2d00f5',
+      },
+      text: {
+        primary: '#000000',
+        secondary: '#616161',
+      },
+      background: {
+        default: '#00e1ffa8',
+        paper: '#8c00ff',
+      },
+    },
+  });
 
-  // const colorMode = useMemo(
-  //   () => ({
-  //     toggleColorMode: toggleColorMode,
-  //   }),
-  //   []
-  // );
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
+
+  const toggleColorMode = () => {
+    setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+  };
 
   const logout = () => {
     localStorage.removeItem('accessToken');
@@ -178,16 +192,6 @@ export default function Sidebar({ children }: MiniDrawerProps) {
 
     fetchProfilePicture();
   }, []);
-
-  // const saveProfilePicture = async (profilePicture: string) => {
-  //   const db = await openDB('myDB', 1);
-  //   const transaction = db.transaction('profilePictures', 'readwrite');
-  //   const objectStore = transaction.objectStore('profilePictures');
-  //   objectStore.clear();
-  //   objectStore.add({ profilePicture });
-
-  //   setProfilePicture(profilePicture);
-  // };
 
   const SidebarItem: React.FC<{
     icon: React.ReactNode;
@@ -256,8 +260,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
   }, [user]);
 
   return (
-    // <ColorModeContext.Provider value={colorMode}>
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={themeMode === 'light' ? lightTheme : darkTheme}>
       <CssBaseline />
       <Box sx={{ display: 'flex' }}>
         <Drawer variant='permanent' open={open}>
@@ -306,7 +309,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
           <Divider />
           <List>
             <SidebarItem
-              icon={<ReceiptLongIcon />}
+              icon={<CurrencyExchangeIcon />}
               text='Transfer'
               to='/transfer'
             />
@@ -362,6 +365,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                   Welcome, {user.firstName} {user.lastName}!{' '}
                 </Text>
               </div>
+
               <Button
                 variant='contained'
                 onClick={logout}
@@ -370,12 +374,12 @@ export default function Sidebar({ children }: MiniDrawerProps) {
               >
                 Logout
               </Button>
+              <Switch onChange={toggleColorMode} />
             </Toolbar>
           </AppBar>
           {children}
         </Box>
       </Box>
     </ThemeProvider>
-    // </ColorModeContext.Provider>
   );
 }

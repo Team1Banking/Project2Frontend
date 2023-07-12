@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Spacer, Text, Input } from '@nextui-org/react';
+import { Button, Spacer, Text, Input, Grid, Card } from '@nextui-org/react';
 
 export default function Transfer() {
   const [recipientAccountId, setRecipientAccountId] = useState('');
@@ -90,40 +90,85 @@ export default function Transfer() {
 
   return (
     <>
-      <div className='flex flex-row items-center justify-center '>
-        <Text
-          h1
-          size={40}
-          css={{
-            textGradient: '45deg, $yellow600 -20%, $red600 100%',
-          }}
-          weight='bold'
-        >
-          Transfer
-        </Text>
-        <Spacer y={1.6} />
-        <Input
-          label='Recipient Account ID'
-          placeholder='Enter recipient account ID'
-          value={recipientAccountId}
-          onChange={(e) => setRecipientAccountId(e.target.value)}
-        />
-        <Spacer y={0.8} />
-        <Spacer y={0.8} />
-        <Input
-          label='Amount'
-          placeholder='Enter transfer amount'
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-        <Spacer y={0.8} />
-        <Button auto color='gradient' size='lg' shadow onClick={handleTransfer}>
-          Transfer
-        </Button>
-        <Spacer y={1.6} />
-        {errorMessage && <Text color='error'>{errorMessage}</Text>}
-        {successMessage && <Text color='success'>{successMessage}</Text>}
-      </div>
+      <Spacer />
+      <Grid.Container
+        gap={2}
+        direction='column'
+        alignContent='center'
+        alignItems='center'
+        justify='center'
+      >
+        <Grid>
+          <Text
+            h1
+            size={40}
+            css={{
+              textGradient: '45deg, $blue800 -20%, $purple800 100%',
+            }}
+            weight='bold'
+          >
+            Transfer
+          </Text>
+        </Grid>
+        <Grid xs={24} md={12}>
+          <Card
+            isHoverable
+            className='flex-row justify-evenly'
+            variant='bordered'
+            css={{
+              width: '30vw',
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            }}
+          >
+            <Card.Body>
+              <Spacer y={1.6} />
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Input
+                  label='Recipient Account ID'
+                  placeholder='Enter recipient account ID'
+                  value={recipientAccountId}
+                  onChange={(e) => setRecipientAccountId(e.target.value)}
+                  width='250px' // Set the desired width
+                />
+              </div>
+              <Spacer y={0.8} />
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Input
+                  label='Amount'
+                  placeholder='Enter transfer amount'
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  width='250px'
+                />
+              </div>
+              <Spacer y={0.8} />
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button
+                  color='gradient'
+                  size='lg'
+                  shadow
+                  onClick={handleTransfer}
+                >
+                  Transfer
+                </Button>
+              </div>
+              <Spacer y={1.6} />
+              {errorMessage && (
+                <Text color='error' style={{ textAlign: 'center' }}>
+                  {errorMessage}
+                </Text>
+              )}
+              {successMessage && (
+                <Text color='success' style={{ textAlign: 'center' }}>
+                  {successMessage}
+                </Text>
+              )}
+            </Card.Body>
+          </Card>
+        </Grid>
+      </Grid.Container>
     </>
   );
 }
