@@ -14,8 +14,8 @@ interface Account {
 }
 
 interface DepositProps {
-  accountId: number;
-  account: Account;
+  accountId: number | undefined;
+  account: Account | null;
   onUpdateBalance: (newBalance: number) => void;
 }
 

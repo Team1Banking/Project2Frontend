@@ -33,7 +33,7 @@ export default function ViewAccounts() {
   const [userId, setUserId] = useState('');
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
-  const [transferAccount, setTransferAccount] = useState<string>('');
+  const [transferAccount, setTransferAccount] = useState<Account | null>(null);
   const [transferAmount, setTransferAmount] = useState<number>(0);
 
   const columns = [
@@ -70,7 +70,20 @@ export default function ViewAccounts() {
         },
       });
 
-      setTransactions(response.data.slice(0, 5));
+      const uniqueTransactions = Array.from(
+        new Set(
+          response.data.map(
+            (transaction: Transaction) => transaction.transactionId
+          )
+        )
+      ).map((transactionId) =>
+        response.data.find(
+          (transaction: Transaction) =>
+            transaction.transactionId === transactionId
+        )
+      );
+
+      setTransactions(uniqueTransactions.slice(0, 5));
     } catch (error) {
       console.error(error);
     }
@@ -108,6 +121,8 @@ export default function ViewAccounts() {
 
   const closeAccountModal = () => {
     setSelectedAccount(null);
+    setTransferAccount(null);
+    setTransferAmount(0);
   };
 
   const fetchAccounts = useCallback(async () => {
@@ -159,6 +174,33 @@ export default function ViewAccounts() {
       setAccounts(updatedAccounts);
     }
   }, [selectedAccount, accounts]);
+
+  const handleTransfer = async () => {
+    try {
+      const url = 'http://localhost:8080/account/Transfer';
+
+      const payload = {
+        amount: transferAmount,
+        recepientAcct: transferAccount?.acctId,
+        senderAcct: selectedAccount?.acctId,
+      };
+
+      const accessToken = localStorage.getItem('accessToken');
+
+      const response = await axios.put(url, payload, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log('Transfer successful:', response.data);
+
+      updateAccounts();
+      fetchTransactions();
+    } catch (error) {
+      console.error('Transfer failed:', error);
+    }
+  };
 
   return (
     <>
@@ -423,6 +465,19 @@ export default function ViewAccounts() {
           <>
             <Modal.Header>
               <Text h2>Account Details</Text>
+              <Spacer />
+              <div>
+                <Text h4>Transfer Amount:</Text>
+                <input
+                  type='number'
+                  value={transferAmount}
+                  onChange={(e) =>
+                    setTransferAmount(parseFloat(e.target.value))
+                  }
+                  min={0}
+                  step={0.01}
+                />
+              </div>
             </Modal.Header>
             <Spacer />
             <Modal.Body>
@@ -470,7 +525,36 @@ export default function ViewAccounts() {
               <Spacer y={3} />
               <div className='flex flex-col '>
                 <div className='flex items-center justify-center glass-background'>
-                  <h1>Transfer</h1>
+                  <div>
+                    <Text>Select Account for Transfer:</Text>
+                    <select
+                      value={transferAccount?.acctId || ''}
+                      onChange={(e) => {
+                        const selectedAccountId = parseInt(e.target.value);
+                        const selectedAccount = accounts.find(
+                          (account) => account.acctId === selectedAccountId
+                        );
+                        setTransferAccount(selectedAccount || null);
+                      }}
+                    >
+                      <option value=''>-- Select Account --</option>
+                      {accounts.map((account) => (
+                        <option key={account.acctId} value={account.acctId}>
+                          {account.acctType} (ID: {account.acctId})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <Button
+                    color='primary'
+                    disabled={
+                      !transferAccount ||
+                      transferAccount.acctId === selectedAccount?.acctId
+                    }
+                    onClick={handleTransfer}
+                  >
+                    Transfer
+                  </Button>
                 </div>
                 <Spacer />
 

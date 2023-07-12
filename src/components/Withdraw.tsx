@@ -16,8 +16,8 @@ interface Account {
 }
 
 interface WithdrawProps {
-  accountId: number;
-  account: Account;
+  accountId: number | undefined;
+  account: Account | null;
   onUpdateBalance: (newBalance: number) => void;
 }
 

@@ -310,19 +310,19 @@ export default function Sidebar({ children }: MiniDrawerProps) {
               text='Transfer'
               to='/transfer'
             />
-            <Spacer y={1} />
+            <Spacer y={0.5} />
             <SidebarItem
               icon={<ReceiptLongIcon />}
               text='All Transactions'
               to='/recent-transactions'
             />
-            <Spacer y={1} />
+            <Spacer y={0.5} />
             <SidebarItem
               icon={<AddCardIcon />}
               text='Add Bank Account'
               to='/register-account'
             />
-            <Spacer y={1} />
+            <Spacer y={0.5} />
             <SidebarItem
               icon={<AccountCircleIcon />}
               text='Update Profile'
