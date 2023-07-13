@@ -13,8 +13,6 @@ import axios from 'axios';
 import Withdraw from './Withdraw';
 import Deposit from './Deposit';
 import './Profile.css';
-import Expenses from './Expenses';
-import Income from './Income';
 
 interface Account {
   acctId: number;
@@ -240,7 +238,7 @@ export default function ViewAccounts() {
             variant='bordered'
             css={{
               height: '400px',
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'rgba(255, 255, 255, 0.039)',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255, 255, 255, 0.5)',
               borderRadius: '8px',
@@ -259,6 +257,7 @@ export default function ViewAccounts() {
             >
               Checking Accounts
             </Text>
+
             <Card.Body>
               {checkingAccounts.map((account) => (
                 <Card
@@ -266,7 +265,7 @@ export default function ViewAccounts() {
                   isHoverable
                   key={account.acctId}
                   css={{
-                    background: 'rgba(255, 255, 255, 0.035)',
+                    background: 'rgba(255, 255, 255, 0.039)',
                     backdropFilter: 'blur(10px)',
                     border: '1px solid rgba(255, 255, 255, 0.09)',
                     borderRadius: '8px',
@@ -329,7 +328,7 @@ export default function ViewAccounts() {
             variant='bordered'
             css={{
               height: '400px',
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'rgba(255, 255, 255, 0.039)',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255, 255, 255, 0.5)',
               borderRadius: '8px',
@@ -355,7 +354,7 @@ export default function ViewAccounts() {
                   key={account.acctId}
                   isHoverable
                   css={{
-                    background: 'rgba(255, 255, 255, 0.035)',
+                    background: 'rgba(255, 255, 255, 0.039)',
                     backdropFilter: 'blur(10px)',
                     border: '1px solid rgba(255, 255, 255, 0.09)',
                     borderRadius: '8px',
@@ -418,7 +417,7 @@ export default function ViewAccounts() {
             variant='bordered'
             css={{
               height: '400px',
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'rgba(255, 255, 255, 0.039)',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255, 255, 255, 0.5)',
               borderRadius: '8px',
@@ -468,7 +467,6 @@ export default function ViewAccounts() {
       </Grid.Container>
 
       <Modal
-        fullScreen
         open={selectedAccount !== null}
         blur
         onClose={closeAccountModal}
@@ -480,6 +478,9 @@ export default function ViewAccounts() {
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
           margin: 'auto',
           position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
         }}
       >
         {selectedAccount && (

@@ -142,7 +142,7 @@ export default function Profile() {
             variant='bordered'
             css={{
               width: '55vw',
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'rgba(255, 255, 255, 0.039)',
               backdropFilter: 'blur(10px)',
               boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             }}

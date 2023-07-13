@@ -101,8 +101,8 @@ export default function RegisterAccount() {
             className='flex-row justify-evenly'
             variant='bordered'
             css={{
-              width: '30vw',
-              background: 'rgba(255, 255, 255, 0.1)',
+              width: '20vw',
+              background: 'rgba(255, 255, 255, 0.039)',
               backdropFilter: 'blur(10px)',
               boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             }}
@@ -120,7 +120,7 @@ export default function RegisterAccount() {
                   <option value='Savings'>Savings</option>
                 </select>
               </div>
-              <Spacer y={0.8} />
+              <Spacer y={2} />
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button
                   auto
