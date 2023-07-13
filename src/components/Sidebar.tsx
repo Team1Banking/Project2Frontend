@@ -288,8 +288,8 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                 key={profilePicture}
                 css={{
                   mw: '600px',
-                  height: open ? '22vh' : '2vh',
-                  width: open ? '22vh' : '2vh',
+                  height: open ? '19vh' : '2vh',
+                  width: open ? '19vh' : '2vh',
                   transition: 'width 0.3s, height 0.3s',
                 }}
                 zoomed
@@ -298,7 +298,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
                 alt='account holder'
                 color='gradient'
                 bordered
-                className='flex mx-auto rounded-full md:w-full cursor-none'
+                className='flex items-center justify-center mx-auto rounded-full md:w-full cursor-none'
                 pointer
               />
             </Grid>
@@ -340,7 +340,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
             <Spacer y={0.5} />
             <SidebarItem
               icon={<AccountCircleIcon />}
-              text='Update Profile'
+              text='User Profile'
               to='/profile'
             />
           </List>
