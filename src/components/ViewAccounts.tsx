@@ -13,6 +13,8 @@ import axios from 'axios';
 import Withdraw from './Withdraw';
 import Deposit from './Deposit';
 import './Profile.css';
+import Expenses from './Expenses';
+import Income from './Income';
 
 interface Account {
   acctId: number;
@@ -466,14 +468,11 @@ export default function ViewAccounts() {
       </Grid.Container>
 
       <Modal
+        fullScreen
         open={selectedAccount !== null}
         blur
         onClose={closeAccountModal}
         css={{
-          maxWidth: '1500vw',
-          maxHeight: '90vh',
-          width: '1000px',
-          height: 'auto',
           background: 'rgba(39, 39, 39, 0.293)',
           backdropFilter: 'blur(10px)',
           borderRadius: '30px',
@@ -481,10 +480,6 @@ export default function ViewAccounts() {
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
           margin: 'auto',
           position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
         }}
       >
         {selectedAccount && (
