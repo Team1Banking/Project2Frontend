@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {
-  Grid,
-  Input,
-  Text,
-  Button,
-  Spacer,
-  Modal,
-  Checkbox,
-  Image,
-} from '@nextui-org/react';
+import { Grid, Input, Text, Button, Spacer, Image } from '@nextui-org/react';
 import CardLogin from './CardLogin';
 import Register from './Register';
 import Tilt from 'react-parallax-tilt';
@@ -19,14 +10,14 @@ export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [visible, setVisible] = useState(false);
+  const [, setVisible] = useState(false);
   const [step, setStep] = useState(1);
   const [checkingSelected, setCheckingSelected] = useState(false);
   const [savingsSelected, setSavingsSelected] = useState(false);
   const [modalUsername, setModalUsername] = useState('');
   const [modalPassword, setModalPassword] = useState('');
   const [userId, setUserId] = useState('');
-  const [accountMessage, setAccountMessage] = useState('');
+  const [, setAccountMessage] = useState('');
 
   const navigate = useNavigate();
 
@@ -243,20 +234,6 @@ export default function Login() {
             <Spacer y={2} />
             <div className='flex'>
               <Register />
-              <Spacer x={3} />
-              <div>
-                <h3>Create new bank account ?</h3>
-                <Spacer />
-                <Button
-                  auto
-                  color='gradient'
-                  size='lg'
-                  shadow
-                  onPress={openModal}
-                >
-                  CREATE ACCOUNT
-                </Button>
-              </div>
             </div>
           </div>
           <Spacer y={1.6} />
@@ -266,107 +243,10 @@ export default function Login() {
             </div>
           )}
           <Spacer />
-
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <Modal
-              closeButton
-              blur
-              aria-label='Registration Modal'
-              open={visible}
-              onClose={closeModal}
-            >
-              <Modal.Header>
-                <Text
-                  h1
-                  size={30}
-                  css={{
-                    textGradient: '45deg, $purple600 -20%, $blue600 100%',
-                  }}
-                  weight='bold'
-                >
-                  {step === 1 ? 'Login' : 'Select Account Type'}
-                </Text>
-              </Modal.Header>
-              <Modal.Body>
-                {step === 1 ? (
-                  <>
-                    <Spacer />
-                    <Input
-                      clearable
-                      bordered
-                      size='xl'
-                      value={modalUsername}
-                      labelPlaceholder='Username'
-                      onChange={(e) => setModalUsername(e.target.value)}
-                      required
-                    />
-                    <Spacer />
-                    <Input.Password
-                      clearable
-                      bordered
-                      size='xl'
-                      value={modalPassword}
-                      labelPlaceholder='Password'
-                      onChange={(e) => setModalPassword(e.target.value)}
-                      required
-                    />
-                    <Spacer />
-                    <Button
-                      auto
-                      color='gradient'
-                      size='lg'
-                      shadow
-                      onPress={banklogin}
-                    >
-                      CONTINUE
-                    </Button>
-                    <Spacer />
-                  </>
-                ) : (
-                  <>
-                    <Checkbox
-                      isSelected={checkingSelected}
-                      color='success'
-                      labelColor='success'
-                      onChange={() => setCheckingSelected(!checkingSelected)}
-                    >
-                      Checking
-                    </Checkbox>
-                    <Checkbox
-                      isSelected={savingsSelected}
-                      color='warning'
-                      labelColor='warning'
-                      onChange={() => setSavingsSelected(!savingsSelected)}
-                    >
-                      Savings
-                    </Checkbox>
-                    <Button
-                      auto
-                      color='gradient'
-                      size='lg'
-                      shadow
-                      onPress={createAccount}
-                    >
-                      SUBMIT
-                    </Button>
-                    <Spacer y={1.6} />
-                    <Text>{accountMessage}</Text>
-                  </>
-                )}
-              </Modal.Body>
-            </Modal>
-          </div>
         </Grid>
         <Spacer x={3} />
 
-        <div style={{ width: '475px', marginTop: '95px' }}>
+        <div style={{ width: '475px', marginTop: '75px' }}>
           <Tilt tiltMaxAngleX={4} tiltMaxAngleY={4}>
             <CardLogin />
           </Tilt>

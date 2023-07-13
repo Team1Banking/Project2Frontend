@@ -18,7 +18,6 @@ interface DepositProps {
   account: Account | null;
   onUpdateBalance: (newBalance: number) => void;
 }
-
 export default function Deposit({
   accountId,
   account,
@@ -31,12 +30,12 @@ export default function Deposit({
 
   const handleDeposit = async () => {
     try {
-      if (!userId) {
-        setErrorMessage('User ID not found.');
+      if (!accountId) {
+        setErrorMessage('Account ID not found.');
         return;
       }
 
-      console.log('User ID:', userId);
+      console.log('Account ID:', accountId);
       console.log('Deposit Amount:', depositAmount);
       console.log('Account Type:', accountType);
 
@@ -47,7 +46,7 @@ export default function Deposit({
       }
 
       const response = await axios.put(
-        `http://localhost:8080/account/Deposit/${userId}`,
+        `http://localhost:8080/account/Deposit/${accountId}`,
         depositAmount,
         {
           headers: {
@@ -57,6 +56,12 @@ export default function Deposit({
         }
       );
       console.log('Response:', response.data);
+
+      setErrorMessage(null);
+
+      if (account) {
+        onUpdateBalance(account.accoutValue + depositAmount);
+      }
     } catch (error) {
       console.error('Error:', error);
       if (isAxiosError(error) && error.response) {
@@ -95,10 +100,10 @@ export default function Deposit({
 
   return (
     <>
-      <div className='flex flex-col items-center justify-center '>
+      <div className='flex flex-row items-center justify-center '>
         <Text
           h1
-          size={40}
+          size={28}
           css={{
             textGradient: '45deg, $blue800 -20%, $purple800 100%',
           }}
@@ -106,28 +111,13 @@ export default function Deposit({
         >
           Deposit
         </Text>
-        {errorMessage && <div>{errorMessage}</div>}
-        <div>
-          {/* <label>
-            <input
-              type='radio'
-              value='Checking'
-              checked={accountType === 'Checking'}
-              onChange={() => setAccountType('Checking')}
-            />
-            Checking
-          </label> */}
-          <Spacer />
-          {/* <label>
-            <input
-              type='radio'
-              value='Savings'
-              checked={accountType === 'Savings'}
-              onChange={() => setAccountType('Savings')}
-            />
-            Savings
-          </label> */}
-        </div>
+        {errorMessage && (
+          <div>
+            <Text color='error' css={{ textAlign: 'center' }} weight='bold'>
+              {errorMessage}
+            </Text>
+          </div>
+        )}
         <Spacer />
         <Input
           type='number'

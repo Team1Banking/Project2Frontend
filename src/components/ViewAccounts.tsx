@@ -7,6 +7,7 @@ import {
   Table,
   Modal,
   Button,
+  Input,
 } from '@nextui-org/react';
 import axios from 'axios';
 import Withdraw from './Withdraw';
@@ -35,6 +36,9 @@ export default function ViewAccounts() {
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
   const [transferAccount, setTransferAccount] = useState<Account | null>(null);
   const [transferAmount, setTransferAmount] = useState<number>(0);
+  const [transferStatus, setTransferStatus] = useState<
+    'success' | 'error' | null
+  >(null);
 
   const columns = [
     {
@@ -105,7 +109,6 @@ export default function ViewAccounts() {
   const checkingAccounts = accounts.filter(
     (account) => account.acctType === 'Checking'
   );
-
   const savingsAccounts = accounts.filter(
     (account) => account.acctType === 'Savings'
   );
@@ -125,11 +128,11 @@ export default function ViewAccounts() {
     setTransferAmount(0);
   };
 
-  const fetchAccounts = useCallback(async () => {
-    const url = `http://localhost:8080/user/${userId}`;
-    const accessToken = localStorage.getItem('accessToken');
-
+  const updateAccounts = useCallback(async () => {
     try {
+      const url = `http://localhost:8080/user/${userId}`;
+      const accessToken = localStorage.getItem('accessToken');
+
       const response = await axios.get<Account[]>(url, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -148,23 +151,19 @@ export default function ViewAccounts() {
   }, [userId]);
 
   useEffect(() => {
-    if (userId) {
-      fetchAccounts();
-      fetchTransactions();
-    }
-  }, [userId, fetchTransactions, fetchAccounts]);
-
-  const updateAccounts = useCallback(async () => {
-    await fetchAccounts();
-  }, [fetchAccounts]);
-
-  useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const parsedToken = parseJwt(accessToken);
     if (parsedToken && parsedToken.Role === 'Account Holder') {
       setUserId(parsedToken.Id);
     }
   }, []);
+
+  useEffect(() => {
+    if (userId) {
+      updateAccounts();
+      fetchTransactions();
+    }
+  }, [userId, updateAccounts, fetchTransactions]);
 
   useEffect(() => {
     if (selectedAccount) {
@@ -195,11 +194,38 @@ export default function ViewAccounts() {
 
       console.log('Transfer successful:', response.data);
 
-      updateAccounts();
-      fetchTransactions();
+      setSelectedAccount((prevAccount) => {
+        if (prevAccount) {
+          return {
+            ...prevAccount,
+            accoutValue: prevAccount.accoutValue - transferAmount,
+          };
+        }
+        return null;
+      });
+
+      if (transferAccount) {
+        const updatedTransferAccount = {
+          ...transferAccount,
+          accoutValue: transferAccount.accoutValue + transferAmount,
+        };
+        const updatedAccounts = accounts.map((account) =>
+          account.acctId === transferAccount.acctId
+            ? updatedTransferAccount
+            : account
+        );
+        setAccounts(updatedAccounts);
+      }
+
+      setTransferStatus('success');
     } catch (error) {
       console.error('Transfer failed:', error);
+
+      setTransferStatus('error');
     }
+
+    await updateAccounts();
+    await fetchTransactions();
   };
 
   return (
@@ -464,25 +490,51 @@ export default function ViewAccounts() {
         {selectedAccount && (
           <>
             <Modal.Header>
-              <Text h2>Account Details</Text>
-              <Spacer />
-              <div>
-                <Text h4>Transfer Amount:</Text>
-                <input
-                  type='number'
-                  value={transferAmount}
-                  onChange={(e) =>
-                    setTransferAmount(parseFloat(e.target.value))
-                  }
-                  min={0}
-                  step={0.01}
-                />
+              <div className='flex flex-row items-center justify-evenly glass-background'>
+                <div>
+                  <Text
+                    h2
+                    size={27}
+                    css={{
+                      textAlign: 'center',
+                    }}
+                    weight='bold'
+                  >
+                    Account ID: {selectedAccount.acctId}
+                  </Text>
+                </div>
+                <Spacer x={4} />
+                <div>
+                  <Text
+                    h2
+                    size={28}
+                    css={{
+                      textAlign: 'center',
+                    }}
+                    weight='bold'
+                  >
+                    {selectedAccount.acctType}
+                  </Text>
+                </div>
+                <Spacer x={4} />
+                <div>
+                  <Text
+                    h2
+                    size={28}
+                    css={{
+                      textAlign: 'center',
+                    }}
+                    weight='bold'
+                  >
+                    Balance: {selectedAccount.accoutValue}
+                  </Text>
+                </div>
               </div>
             </Modal.Header>
-            <Spacer />
+            <Spacer x={7} />
             <Modal.Body>
-              <div className='flex flex-row items-center justify-evenly '>
-                <div className='glass-background'>
+              <div className='flex flex-col items-center justify-center'>
+                <div className='flex flex-col items-start justify-center'>
                   <Deposit
                     accountId={selectedAccount!.acctId}
                     account={selectedAccount!}
@@ -500,9 +552,7 @@ export default function ViewAccounts() {
                       fetchTransactions();
                     }}
                   />
-                </div>
-                <Spacer />
-                <div className='glass-background'>
+                  <Spacer y={2} />
                   <Withdraw
                     accountId={selectedAccount!.acctId}
                     account={selectedAccount!}
@@ -520,31 +570,52 @@ export default function ViewAccounts() {
                       fetchTransactions();
                     }}
                   />
-                </div>
-              </div>
-              <Spacer y={3} />
-              <div className='flex flex-col '>
-                <div className='flex items-center justify-center glass-background'>
-                  <div>
-                    <Text>Select Account for Transfer:</Text>
-                    <select
-                      value={transferAccount?.acctId || ''}
-                      onChange={(e) => {
-                        const selectedAccountId = parseInt(e.target.value);
-                        const selectedAccount = accounts.find(
-                          (account) => account.acctId === selectedAccountId
-                        );
-                        setTransferAccount(selectedAccount || null);
+
+                  <Spacer y={2} />
+                  <div className='flex flex-row items-center justify-center '>
+                    <Text
+                      h1
+                      size={28}
+                      css={{
+                        textGradient: '45deg, $blue800 -20%, $purple800 100%',
                       }}
+                      weight='bold'
                     >
-                      <option value=''>-- Select Account --</option>
-                      {accounts.map((account) => (
-                        <option key={account.acctId} value={account.acctId}>
-                          {account.acctType} (ID: {account.acctId})
-                        </option>
-                      ))}
-                    </select>
+                      Transfer Amount:
+                    </Text>
+                    <Spacer x={2} />
+                    <div className='flex flex-row'>
+                      <Input
+                        type='number'
+                        value={transferAmount}
+                        onChange={(e) =>
+                          setTransferAmount(parseFloat(e.target.value))
+                        }
+                      />
+                      <Spacer />
+                      <select
+                        className=' glass-background'
+                        value={transferAccount?.acctId || ''}
+                        onChange={(e) => {
+                          const selectedAccountId = parseInt(e.target.value);
+                          const selectedAccount = accounts.find(
+                            (account) => account.acctId === selectedAccountId
+                          );
+                          setTransferAccount(selectedAccount || null);
+                        }}
+                      >
+                        <option value=''>Account</option>
+                        {accounts.map((account) => (
+                          <option key={account.acctId} value={account.acctId}>
+                            {account.acctType} (ID: {account.acctId})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
+                </div>
+                <Spacer y={3} />
+                <div className='flex flex-col justify-items-start '>
                   <Button
                     color='primary'
                     disabled={
@@ -556,54 +627,31 @@ export default function ViewAccounts() {
                     Transfer
                   </Button>
                 </div>
-                <Spacer />
-
-                <div className='flex flex-row justify-center'>
-                  <div>
-                    <Text
-                      h2
-                      size={20}
-                      css={{
-                        textGradient: '45deg, $blue800 -20%, $purple800 100%',
-                        textAlign: 'center',
-                      }}
-                      weight='bold'
-                    >
-                      Account ID: {selectedAccount.acctId}
-                    </Text>
-                  </div>
-                  <Spacer />
-                  <div>
-                    <Text
-                      h2
-                      size={20}
-                      css={{
-                        textGradient: '45deg, $blue800 -20%, $purple800 100%',
-                        textAlign: 'center',
-                      }}
-                      weight='bold'
-                    >
-                      {selectedAccount.acctType}
-                    </Text>
-                  </div>
-                  <Spacer />
-                  <div>
-                    <Text
-                      h2
-                      size={20}
-                      css={{
-                        textGradient: '45deg, $blue800 -20%, $purple800 100%',
-                        textAlign: 'center',
-                      }}
-                      weight='bold'
-                    >
-                      Balance: {selectedAccount.accoutValue}
-                    </Text>
-                  </div>
-                </div>
               </div>
             </Modal.Body>
             <Modal.Footer>
+              {transferStatus === 'success' && (
+                <div className='flex justify-center'>
+                  <Text
+                    color='success'
+                    css={{ textAlign: 'center' }}
+                    weight='bold'
+                  >
+                    Transfer successful!
+                  </Text>
+                </div>
+              )}
+              {transferStatus === 'error' && (
+                <div className='flex justify-center'>
+                  <Text
+                    color='error'
+                    css={{ textAlign: 'center' }}
+                    weight='bold'
+                  >
+                    Transfer failed. Please try again.
+                  </Text>
+                </div>
+              )}
               <Button color='success' onClick={closeAccountModal}>
                 Close
               </Button>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+
 import { Input, Button, Modal, Text, Spacer } from '@nextui-org/react';
 
 export default function Register() {
@@ -10,8 +10,6 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [submissionStatus, setSubmissionStatus] = useState('');
   const [visible, setVisible] = useState(false);
-
-  const navigate = useNavigate();
 
   const closeHandler = () => {
     setVisible(false);
@@ -32,9 +30,6 @@ export default function Register() {
 
       if (response.status >= 200 && response.status < 300) {
         setSubmissionStatus(`${user.username} was successfully registered!`);
-
-        setVisible(false);
-        navigate('/');
       } else {
         throw new Error('User is already registered');
       }
@@ -46,17 +41,19 @@ export default function Register() {
 
   return (
     <div>
-      <h3>New here? Sign up!</h3>
-      <Spacer />
-      <Button
-        auto
-        color='warning'
-        size='lg'
-        shadow
-        onPress={() => setVisible(true)}
-      >
-        REGISTER
-      </Button>
+      <div className='flex flex-row'>
+        <h3>New here? Sign up!</h3>
+        <Spacer />
+        <Button
+          auto
+          color='warning'
+          size='lg'
+          shadow
+          onPress={() => setVisible(true)}
+        >
+          REGISTER
+        </Button>
+      </div>
 
       <Modal
         closeButton
@@ -137,7 +134,7 @@ export default function Register() {
         </Modal.Footer>
         {submissionStatus && (
           <Text
-            color='#FF0000'
+            color='#00ff33'
             css={{
               textAlign: 'center',
             }}

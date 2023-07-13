@@ -3,12 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Text, Input, Button, Spacer } from '@nextui-org/react';
 import axios, { AxiosError } from 'axios';
 import Account from './ViewAccounts';
-import './Profile.css';
 
 function isAxiosError(error: any): error is AxiosError {
   return error.isAxiosError;
 }
-
 interface Account {
   acctId: number;
   acctType: string;
@@ -20,7 +18,6 @@ interface WithdrawProps {
   account: Account | null;
   onUpdateBalance: (newBalance: number) => void;
 }
-
 export default function Withdraw({
   accountId,
   account,
@@ -33,12 +30,12 @@ export default function Withdraw({
 
   const handleWithdraw = async () => {
     try {
-      if (!userId) {
-        setErrorMessage('User ID not found.');
+      if (!accountId) {
+        setErrorMessage('Account ID not found.');
         return;
       }
 
-      console.log('User ID:', userId);
+      console.log('Account ID:', accountId);
       console.log('Withdraw Amount:', withdrawAmount);
       console.log('Account Type:', accountType);
 
@@ -49,7 +46,7 @@ export default function Withdraw({
       }
 
       const response = await axios.put(
-        `http://localhost:8080/account/Withdraw/${userId}`,
+        `http://localhost:8080/account/Withdraw/${accountId}`,
         withdrawAmount,
         {
           headers: {
@@ -59,6 +56,12 @@ export default function Withdraw({
         }
       );
       console.log('Response:', response.data);
+
+      setErrorMessage(null);
+
+      if (account) {
+        onUpdateBalance(account.accoutValue - withdrawAmount);
+      }
     } catch (error) {
       console.error('Error:', error);
       if (isAxiosError(error) && error.response) {
@@ -97,10 +100,10 @@ export default function Withdraw({
 
   return (
     <>
-      <div className='flex flex-col items-center justify-center '>
+      <div className='flex flex-row items-center justify-center '>
         <Text
           h1
-          size={40}
+          size={28}
           css={{
             textGradient: '45deg, $blue800 -20%, $purple800 100%',
           }}
@@ -108,28 +111,13 @@ export default function Withdraw({
         >
           Withdraw
         </Text>
-        {errorMessage && <div>{errorMessage}</div>}
-        <div>
-          {/* <label>
-            <input
-              type='radio'
-              value='Checking'
-              checked={accountType === 'Checking'}
-              onChange={() => setAccountType('Checking')}
-            />
-            Checking
-          </label> */}
-          <Spacer />
-          {/* <label>
-            <input
-              type='radio'
-              value='Savings'
-              checked={accountType === 'Savings'}
-              onChange={() => setAccountType('Savings')}
-            />
-            Savings
-          </label> */}
-        </div>
+        {errorMessage && (
+          <div>
+            <Text color='error' css={{ textAlign: 'center' }} weight='bold'>
+              {errorMessage}
+            </Text>
+          </div>
+        )}
         <Spacer />
         <Input
           type='number'
