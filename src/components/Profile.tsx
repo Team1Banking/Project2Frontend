@@ -1,14 +1,26 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Text, Grid, Avatar, Spacer, Card } from '@nextui-org/react';
 import Button from '@mui/material/Button';
 import { openDB } from 'idb';
+import axios from 'axios';
 
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+
+interface UserInfo {
+  firstName: string;
+  lastName: string;
+  phoneNumber: number;
+  email: string;
+  homeAddress: string;
+  mailingAddress: string;
+}
 
 export default function Profile() {
   const accessToken = localStorage.getItem('accessToken');
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   function parseJwt(token: string) {
     var base64Url = token.split('.')[1];
@@ -75,9 +87,36 @@ export default function Profile() {
     }
   };
 
-  if (!user) {
-    return null;
-  }
+  const getUserInfo = async () => {
+    try {
+      const userId = user?.Id;
+      const response = await axios.get(
+        `http://localhost:8080/user/${userId}/UserInfo`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log('User Info Response:', response.data);
+      setUserInfo(response.data);
+    } catch (error) {
+      console.error('Error retrieving user information:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      getUserInfo();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    console.log('User:', user);
+    console.log('Profile Picture:', profilePicture);
+    console.log('Error Message:', errorMessage);
+    console.log('User Info:', userInfo);
+  }, [user, profilePicture, errorMessage, userInfo]);
 
   return (
     <>
@@ -133,18 +172,23 @@ export default function Profile() {
                     className='flex mx-auto rounded-full md:w-full cursor-none'
                     pointer
                   />
+                  {userInfo && (
+                    <>
+                      <h1>
+                        {userInfo.firstName} {userInfo.lastName}
+                      </h1>
+                      <div>
+                        <h3>Phone Number: {userInfo.phoneNumber}</h3>
+                        <h3>Email: {userInfo.email}</h3>
+                        {/* <h3>Home Address: {userInfo.homeAddress}</h3>
+                        <h3>Mailing Address: {userInfo.mailingAddress}</h3> */}
+                      </div>
+                    </>
+                  )}
                   <div className='flex flex-col pl-20'>
                     <h1 className=''>
-                      {user.firstName} {user.lastName}
+                      {user?.firstName} {user?.lastName}
                     </h1>
-                    <div className='flex flex-col'>
-                      <h3>75 Fairfield Street South Lyon, MI 48178</h3>
-                      <h3>alializ@gmail.com</h3>
-                      <div className='flex flex-row'>
-                        <h3>777-777-7777</h3>
-                        <Spacer />
-                      </div>
-                    </div>
                   </div>
                   <div className='flex flex-col mt-4'>
                     <Spacer y={2} />

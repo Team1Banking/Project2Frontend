@@ -27,7 +27,7 @@ export default function Income() {
 
   const fetchTransactions = useCallback(async () => {
     try {
-      const url = `http://localhost:8080/user/${userId}/All/Transactions`;
+      const url = `http://localhost:8080/account/${userId}/All/Transactions/Income`;
       const accessToken = localStorage.getItem('accessToken');
 
       const response = await axios.get(url, {
@@ -42,12 +42,9 @@ export default function Income() {
             (t) => t.transactionId === transaction.transactionId
           ) === index
       );
-      const depositTransactions = uniqueTransactions.filter(
-        (transaction: Transaction) => transaction.transactionType === 'Deposit'
-      );
 
-      setTransactions(depositTransactions);
-      console.log('Deposit Transactions:', depositTransactions);
+      setTransactions(uniqueTransactions);
+      console.log('Transactions:', uniqueTransactions);
     } catch (error) {
       console.error(error);
       setErrorMessage('Failed to fetch transactions.');

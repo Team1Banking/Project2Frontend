@@ -27,7 +27,7 @@ export default function Expenses() {
 
   const fetchTransactions = useCallback(async () => {
     try {
-      const url = `http://localhost:8080/user/${userId}/All/Transactions`;
+      const url = `http://localhost:8080/account/${userId}/All/Transactions/Expenses`;
       const accessToken = localStorage.getItem('accessToken');
 
       const response = await axios.get(url, {
@@ -43,14 +43,8 @@ export default function Expenses() {
           ) === index
       );
 
-      const validTransactions = uniqueTransactions.filter(
-        (transaction: Transaction) =>
-          transaction.transactionType === 'Withdrawal' ||
-          transaction.transactionType === 'Transfer'
-      );
-
-      setTransactions(validTransactions);
-      console.log('Withdrawal and Transfer Transactions:', validTransactions);
+      setTransactions(uniqueTransactions);
+      console.log('Transactions:', uniqueTransactions);
     } catch (error) {
       console.error(error);
       setErrorMessage('Failed to fetch transactions.');
