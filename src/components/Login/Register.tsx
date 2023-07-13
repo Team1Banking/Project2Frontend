@@ -21,7 +21,7 @@ export default function Register() {
     console.log(user);
 
     try {
-      const registerUrl = process.env.REACT_APP_REGISTER_API_URL;
+      const registerUrl = `${process.env.REACT_APP_HOST_API_URL}/auth/register`;
       if (!registerUrl) {
         throw new Error('REGISTER URL is not defined.');
       }

@@ -65,7 +65,7 @@ export default function ViewAccounts() {
 
   const fetchTransactions = useCallback(async () => {
     try {
-      const url = `http://localhost:8080/user/${userId}/All/Transactions`;
+      const url = `${process.env.REACT_APP_HOST_API_URL}/user/${userId}/All/Transactions`;
       const accessToken = localStorage.getItem('accessToken');
 
       const response = await axios.get(url, {
@@ -130,7 +130,7 @@ export default function ViewAccounts() {
 
   const updateAccounts = useCallback(async () => {
     try {
-      const url = `http://localhost:8080/user/${userId}`;
+      const url = `${process.env.REACT_APP_HOST_API_URL}/user/${userId}`;
       const accessToken = localStorage.getItem('accessToken');
 
       const response = await axios.get<Account[]>(url, {
@@ -176,7 +176,7 @@ export default function ViewAccounts() {
 
   const handleTransfer = async () => {
     try {
-      const url = 'http://localhost:8080/account/Transfer';
+      const url = `${process.env.REACT_APP_HOST_API_URL}/account/Transfer`;
 
       const payload = {
         amount: transferAmount,

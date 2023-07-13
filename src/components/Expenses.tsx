@@ -27,7 +27,7 @@ export default function Expenses() {
 
   const fetchTransactions = useCallback(async () => {
     try {
-      const url = `http://localhost:8080/account/${userId}/All/Transactions/Expenses`;
+      const url = `${process.env.REACT_APP_HOST_API_URL}/account/${userId}/All/Transactions/Expenses`;
       const accessToken = localStorage.getItem('accessToken');
 
       const response = await axios.get(url, {

@@ -46,7 +46,7 @@ export default function RegisterAccount() {
   const createAccount = async () => {
     try {
       console.log('userId:', userId);
-      const url = `http://localhost:8080/account/${userId}/register`;
+      const url = `${process.env.REACT_APP_HOST_API_URL}/account/${userId}/register`;
 
       const payload = {
         acctType: accountType,

@@ -91,7 +91,7 @@ export default function Profile() {
     try {
       const userId = user?.Id;
       const response = await axios.get(
-        `http://localhost:8080/user/${userId}/UserInfo`,
+        `${process.env.REACT_APP_HOST_API_URL}/user/${userId}/UserInfo`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

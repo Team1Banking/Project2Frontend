@@ -25,7 +25,7 @@ export default function Login() {
     const credentials = { username, password };
     console.log(credentials);
     try {
-      const loginUrl = process.env.REACT_APP_LOGIN_API_URL;
+      const loginUrl = `${process.env.REACT_APP_HOST_API_URL}/auth/login`;
       if (!loginUrl) {
         throw new Error('LOGIN URL is not defined.');
       }
@@ -66,7 +66,7 @@ export default function Login() {
     const credentials = { username: modalUsername, password: modalPassword };
     console.log(credentials);
     try {
-      const loginUrl = process.env.REACT_APP_LOGIN_API_URL;
+      const loginUrl = `${process.env.REACT_APP_HOST_API_URL}/auth/login`;
       if (!loginUrl) {
         throw new Error('LOGIN URL is not defined.');
       }
@@ -139,7 +139,7 @@ export default function Login() {
 
   const createAccount = async () => {
     try {
-      const url = `http://localhost:8080/account/${userId}/register`;
+      const url = `${process.env.REACT_APP_HOST_API_URL}/account/${userId}/register`;
       const accountType = checkingSelected
         ? 'Checking'
         : savingsSelected

@@ -46,7 +46,7 @@ export default function Withdraw({
       }
 
       const response = await axios.put(
-        `http://localhost:8080/account/Withdraw/${accountId}`,
+        `${process.env.REACT_APP_HOST_API_URL}/account/Withdraw/${accountId}`,
         withdrawAmount,
         {
           headers: {

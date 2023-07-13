@@ -46,7 +46,7 @@ export default function Deposit({
       }
 
       const response = await axios.put(
-        `http://localhost:8080/account/Deposit/${accountId}`,
+        `${process.env.REACT_APP_HOST_API_URL}/account/Deposit/${accountId}`,
         depositAmount,
         {
           headers: {

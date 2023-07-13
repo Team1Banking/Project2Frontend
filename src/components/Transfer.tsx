@@ -30,7 +30,7 @@ export default function Transfer() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const url = `http://localhost:8080/user/${userId}`;
+        const url = `${process.env.REACT_APP_HOST_API_URL}/user/${userId}`;
         const accessToken = localStorage.getItem('accessToken');
         const response = await axios.get(url, {
           headers: {
@@ -62,7 +62,7 @@ export default function Transfer() {
 
   const handleTransfer = async () => {
     try {
-      const url = 'http://localhost:8080/account/Transfer';
+      const url = `${process.env.REACT_APP_HOST_API_URL}/account/Transfer`;
 
       const payload = {
         amount: parseInt(amount),
@@ -182,8 +182,13 @@ export default function Transfer() {
                 </Button>
               </div>
               <Spacer y={1.6} />
-              {errorMessage && <Text color='error'>{errorMessage}</Text>}
-              {successMessage && <Text color='success'>{successMessage}</Text>}
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                {errorMessage && <Text color='error'>{errorMessage}</Text>}
+                {successMessage && (
+                  <Text color='success'>{successMessage}</Text>
+                )}
+              </div>
+              <Spacer y={1.6} />
             </Card.Body>
           </Card>
         </Grid>
