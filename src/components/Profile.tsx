@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Text, Grid, Avatar, Input, Spacer, Card } from '@nextui-org/react';
+import { Text, Grid, Avatar, Spacer, Card } from '@nextui-org/react';
 import Button from '@mui/material/Button';
 import { openDB } from 'idb';
 
@@ -9,8 +9,6 @@ export default function Profile() {
   const accessToken = localStorage.getItem('accessToken');
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const password = 'password123';
 
   function parseJwt(token: string) {
     var base64Url = token.split('.')[1];
@@ -145,13 +143,6 @@ export default function Profile() {
                       <div className='flex flex-row'>
                         <h3>777-777-7777</h3>
                         <Spacer />
-                        <h3
-                          onMouseEnter={() => setIsHovered(true)}
-                          onMouseLeave={() => setIsHovered(false)}
-                          className='cursor-pointer'
-                        >
-                          {isHovered ? password : ''}
-                        </h3>
                       </div>
                     </div>
                   </div>
