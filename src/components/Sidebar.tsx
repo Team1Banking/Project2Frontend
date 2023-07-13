@@ -30,8 +30,7 @@ import profilePictureImage from './antUser.png';
 import Switch from '@mui/material/Switch';
 import PaidIcon from '@mui/icons-material/Paid';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-
-// const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+import rev from './rev.png';
 
 const drawerWidth = 240;
 
@@ -145,7 +144,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
         main: '#4352b7',
       },
       secondary: {
-        main: '#2d00f5',
+        main: '#912aff',
       },
       text: {
         primary: '#000000',
@@ -264,8 +263,12 @@ export default function Sidebar({ children }: MiniDrawerProps) {
   return (
     <ThemeProvider theme={themeMode === 'light' ? lightTheme : darkTheme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex' }}>
-        <Drawer variant='permanent' open={open}>
+      <Box sx={{ display: 'flex', height: '100vh' }}>
+        <Drawer
+          variant='permanent'
+          open={open}
+          sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+        >
           <div className='flex items-center justify-between '>
             <div>
               <IconButton onClick={handleDrawerClose}>
@@ -279,7 +282,6 @@ export default function Sidebar({ children }: MiniDrawerProps) {
             <DrawerHeader></DrawerHeader>
           </div>
           <Divider />
-
           <Grid.Container gap={3}>
             <Grid>
               <Avatar
@@ -342,6 +344,18 @@ export default function Sidebar({ children }: MiniDrawerProps) {
               to='/profile'
             />
           </List>
+          <Box sx={{ flexGrow: 1 }}></Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingBottom: '1rem',
+            }}
+          >
+            <img src={rev} alt='revature logo' width='100' height='100' />
+          </Box>
+          <Box sx={{ flexGrow: 0.5 }}></Box>
         </Drawer>
         <Box
           component='main'

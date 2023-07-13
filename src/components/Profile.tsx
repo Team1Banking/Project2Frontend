@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, useRef } from 'react';
 import { Text, Grid, Avatar, Spacer, Card } from '@nextui-org/react';
 import Button from '@mui/material/Button';
 import { openDB } from 'idb';
@@ -106,7 +106,9 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    if (user) {
+    const prevUser = prevUserRef.current;
+
+    if (user && JSON.stringify(prevUser) !== JSON.stringify(user)) {
       getUserInfo();
     }
   }, [user]);
@@ -118,6 +120,12 @@ export default function Profile() {
     console.log('User Info:', userInfo);
   }, [user, profilePicture, errorMessage, userInfo]);
 
+  const prevUserRef = useRef();
+
+  useEffect(() => {
+    prevUserRef.current = user;
+  }, [user]);
+
   return (
     <>
       <Spacer />
@@ -128,32 +136,32 @@ export default function Profile() {
         alignContent='center'
         alignItems='center'
       >
-        <Text
-          h1
-          size={40}
-          css={{
-            textGradient: '45deg, $blue800 -20%, $purple800 100%',
-            paddingLeft: 15,
-          }}
-          weight='bold'
-        >
-          {user.sub}
-        </Text>
-
         <Grid xs={24} md={12}>
           <Card
-            className='flex-row justify-evenly'
+            className='flex-row justify-center'
             variant='bordered'
             css={{
-              width: '65vw',
+              width: '55vw',
               background: 'rgba(255, 255, 255, 0.1)',
               backdropFilter: 'blur(10px)',
               boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             }}
           >
             <Card.Body>
-              <div className='flex items-center justify-between '>
-                <div className='flex p-5 pr-12 space-between'>
+              <div className='flex flex-row items-center justify-center '>
+                <div className='flex flex-col items-center justify-center'>
+                  <Spacer />
+                  <Text
+                    h1
+                    size={40}
+                    css={{
+                      textGradient: '45deg, $blue800 -20%, $purple800 100%',
+                      paddingLeft: 15,
+                    }}
+                    weight='bold'
+                  >
+                    {user.sub}
+                  </Text>
                   <Avatar
                     zoomed
                     css={{
@@ -172,6 +180,40 @@ export default function Profile() {
                     className='flex mx-auto rounded-full md:w-full cursor-none'
                     pointer
                   />
+                  <Spacer y={2} />
+                  <Button variant='contained' color='secondary'>
+                    <label
+                      htmlFor='profilePictureUpload'
+                      className='upload-button'
+                    >
+                      Upload Image
+                    </label>
+                  </Button>
+                  <input
+                    type='file'
+                    id='profilePictureUpload'
+                    accept='image/*'
+                    className='hidden'
+                    onChange={handleProfilePictureUpload}
+                  />
+
+                  <div className='flex flex-col mt-4'>
+                    <Spacer y={2} />
+                    {errorMessage && <Text color='error'>{errorMessage}</Text>}
+                  </div>
+                </div>
+                <Spacer x={5} />
+                <div className='flex flex-col justify-start'>
+                  <Text
+                    h1
+                    size={50}
+                    css={{
+                      textGradient: '45deg, $blue800 -20%, $purple800 100%',
+                    }}
+                    weight='bold'
+                  >
+                    {user?.firstName} {user?.lastName}
+                  </Text>
                   {userInfo && (
                     <>
                       <h1>
@@ -180,101 +222,16 @@ export default function Profile() {
                       <div>
                         <h3>Phone Number: {userInfo.phoneNumber}</h3>
                         <h3>Email: {userInfo.email}</h3>
-                        {/* <h3>Home Address: {userInfo.homeAddress}</h3>
-                        <h3>Mailing Address: {userInfo.mailingAddress}</h3> */}
+                        <h3>Home Address: {userInfo.homeAddress}</h3>
+                        <h3>Mailing Address: {userInfo.mailingAddress}</h3>
                       </div>
                     </>
                   )}
-                  <div className='flex flex-col pl-20'>
-                    <h1 className=''>
-                      {user?.firstName} {user?.lastName}
-                    </h1>
-                  </div>
-                  <div className='flex flex-col mt-4'>
-                    <Spacer y={2} />
-                    {errorMessage && <Text color='error'>{errorMessage}</Text>}
-                  </div>
                 </div>
               </div>
-
-              <Grid.Container gap={2} className='flex'>
-                <Spacer y={6} />
-                <div className='flex'>
-                  {/* <div className='flex flex-col w-56'>
-                    <Input
-                      clearable
-                      bordered
-                      labelPlaceholder='Update First Name'
-                    />
-                    <Spacer y={2.5} />
-                    <Input
-                      clearable
-                      bordered
-                      labelPlaceholder='Update Last Name'
-                    />
-                  </div>
-                  <Spacer y={2.5} />
-                  <div className='flex flex-col w-56'>
-                    <Input
-                      clearable
-                      bordered
-                      labelPlaceholder='Update Username'
-                    />
-
-                    <Spacer y={2.5} />
-                    <Input
-                      clearable
-                      bordered
-                      labelPlaceholder='Update Password'
-                    />
-                  </div>
-                  <Spacer y={2.5} />
-                  <div className='flex flex-col w-56'>
-                    <Input clearable bordered labelPlaceholder='Update Email' />
-                    <Spacer y={2.5} />
-                    <Input
-                      clearable
-                      bordered
-                      labelPlaceholder='Update Phone Number'
-                    />
-                  </div>
-                  <Spacer y={2.5} />
-                  <div className='flex flex-col w-56'>
-                    <Input
-                      clearable
-                      bordered
-                      labelPlaceholder='Update Phone Number'
-                    />
-
-                    <Spacer y={2.5} />
-                    <Input
-                      clearable
-                      bordered
-                      labelPlaceholder='Update Mailing Address'
-                    />
-                  </div> */}
-                </div>
-              </Grid.Container>
             </Card.Body>
 
-            <Card.Footer>
-              <Button
-                variant='contained'
-                color='secondary'
-                sx={{ marginLeft: 'auto' }}
-              >
-                <label htmlFor='profilePictureUpload' className='upload-button'>
-                  Upload Image
-                </label>
-              </Button>
-              <input
-                type='file'
-                id='profilePictureUpload'
-                accept='image/*'
-                className='hidden'
-                onChange={handleProfilePictureUpload}
-              />
-            </Card.Footer>
+            <Card.Footer></Card.Footer>
           </Card>
         </Grid>
       </Grid.Container>

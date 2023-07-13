@@ -92,7 +92,7 @@ export default function RegisterAccount() {
             }}
             weight='bold'
           >
-            Create Bank Account
+            Add Account
           </Text>
         </Grid>
         <Grid xs={24} md={12}>
@@ -110,7 +110,11 @@ export default function RegisterAccount() {
             <Card.Body>
               <Spacer y={0.8} />
               <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <select value={accountType} onChange={handleAccountTypeChange}>
+                <select
+                  className=' glass-background'
+                  value={accountType}
+                  onChange={handleAccountTypeChange}
+                >
                   <option value=''>Select Account Type</option>
                   <option value='Checking'>Checking</option>
                   <option value='Savings'>Savings</option>

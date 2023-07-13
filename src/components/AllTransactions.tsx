@@ -110,30 +110,32 @@ export default function AllTransactions() {
       {errorMessage && <Text color='error'>{errorMessage}</Text>}
 
       {transactions.length > 0 ? (
-        <Table
-          aria-label='Transactions table'
-          css={{
-            height: 'auto',
-            minWidth: '100%',
-          }}
-        >
-          <Table.Header>
-            {columns.map((column) => (
-              <Table.Column key={column.key}>{column.label}</Table.Column>
-            ))}
-          </Table.Header>
-          <Table.Body>
-            {transactions.map((transaction) => (
-              <Table.Row key={transaction.transactionId}>
-                {columns.map((column) => (
-                  <Table.Cell key={column.key}>
-                    {transaction[column.key]}
-                  </Table.Cell>
-                ))}
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+        <div style={{ overflowX: 'auto' }} className='h-full'>
+          <Table
+            aria-label='Transactions table'
+            css={{
+              height: 'auto',
+              tableLayout: 'auto',
+            }}
+          >
+            <Table.Header>
+              {columns.map((column) => (
+                <Table.Column key={column.key}>{column.label}</Table.Column>
+              ))}
+            </Table.Header>
+            <Table.Body>
+              {transactions.map((transaction) => (
+                <Table.Row key={transaction.transactionId}>
+                  {columns.map((column) => (
+                    <Table.Cell key={column.key}>
+                      {transaction[column.key]}
+                    </Table.Cell>
+                  ))}
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </div>
       ) : (
         <Text>No transactions available.</Text>
       )}
