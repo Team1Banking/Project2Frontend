@@ -5,7 +5,6 @@
 A banking web application that consists of a back-end system built with the Spring Framework and a front-end application developed using React. The back-end system utilizes various components of the Spring Framework, including Spring Boot, Spring Data, Spring Web, and Spring Security with JWT authentication. The front-end communicates with the back-end through Axios requests.
 
 ## Overview
-
 Simulates an online banking system. It allows users to register/login, deposit/withdraw money from accounts, transfer money between accounts and recipients, and view transactions.
 
 ### Back-End:
@@ -33,7 +32,6 @@ Simulates an online banking system. It allows users to register/login, deposit/w
 Clone the repository: git clone <https://github.com/Team1Banking/Project2.git>
 
 ### Set up the back-end:
-
 - Install dependencies: cd backend && mvn install
 - Configure the database connection in application.properties.
 - Run the back-end: mvn spring-boot:run
