@@ -8,13 +8,13 @@ A banking web application that consists of a back-end system built with the Spri
 
 Simulates an online banking system. It allows users to register/login, deposit/withdraw money from accounts, transfer money between accounts and recipients, and view transactions.
 
-### - Back-End:
+### Back-End:
 - Spring Boot: Used for the creation and setup of the application.
 - Spring Data: Utilized for communication with a PostgreSQL database.
 - Spring Web: Used for HTTP request handling and creation of controllers.
 - Spring Security: Implements JWT-based authentication for secure access.
   
-### - Front-End:
+### Front-End:
 - React: The front-end is built using React, a popular JavaScript library for building user interfaces.
 - Axios: Used for making HTTP requests from the front-end to the back-end.
   
