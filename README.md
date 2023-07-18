@@ -1,4 +1,4 @@
-# ANT - Associated network of transactions
+# ANT - Associated Network Of Transactions
 
 ![ant-high-resolution-logo-color-on-transparent-background_(4)](https://github.com/Team1Banking/Project2/assets/107225817/8d27752a-6d91-434d-a0fe-cb6b9f1efd9d)
 
@@ -59,8 +59,3 @@ Clone the repository: git clone <https://github.com/Team1Banking/Project2.git>
 ### ER Diagram:
 <img width="1363" alt="Screenshot 2023-07-17 at 11 02 08 PM" src="https://github.com/Team1Banking/Project2/assets/107225817/b8d47e0d-8d8f-4001-9f62-e234b36bed3f">
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
