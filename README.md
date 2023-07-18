@@ -2,11 +2,11 @@
 
 ![ant-high-resolution-logo-color-on-transparent-background_(4)](https://github.com/Team1Banking/Project2/assets/107225817/8d27752a-6d91-434d-a0fe-cb6b9f1efd9d)
 
-- A banking web application that consists of a back-end system built with the Spring Framework and a front-end application developed using React. The back-end system utilizes various components of the Spring Framework, including Spring Boot, Spring Data, Spring Web, and Spring Security with JWT authentication. The front-end communicates with the back-end through Axios requests.
+A banking web application that consists of a back-end system built with the Spring Framework and a front-end application developed using React. The back-end system utilizes various components of the Spring Framework, including Spring Boot, Spring Data, Spring Web, and Spring Security with JWT authentication. The front-end communicates with the back-end through Axios requests.
 
 ## Overview
 
-- Simulates an online banking system. It allows users to register/login, deposit/withdraw money from accounts, transfer money between accounts and recipients, and view transactions.
+Simulates an online banking system. It allows users to register/login, deposit/withdraw money from accounts, transfer money between accounts and recipients, and view transactions.
 
 ### - Back-End:
 - Spring Boot: Used for the creation and setup of the application.
