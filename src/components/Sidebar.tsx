@@ -141,7 +141,7 @@ export default function Sidebar({ children }: MiniDrawerProps) {
     palette: {
       mode: 'light',
       primary: {
-        main: '#4352b7',
+        main: '#3d4ba8',
       },
       secondary: {
         main: '#912aff',
